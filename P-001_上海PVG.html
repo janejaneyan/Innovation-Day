@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cathay Pacific × WorkBuddy 行程报告 #P-001</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, sans-serif;
+    background: #F0F2F5; color: #1A1A2E; line-height: 1.5;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 16px; }
+
+  /* Header */
+  header {
+    background: #004D3A; padding: 18px 22px;
+    display: flex; align-items: center; gap: 12px; border-radius: 12px 12px 0 0;
+  }
+  .wb-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #2B5CE6; color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px; flex-shrink: 0;
+  }
+  .cp-icon {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: #00604C; color: #fff; display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 14px; flex-shrink: 0;
+  }
+  header h1 { color: #fff; font-size: 20px; font-weight: 700; flex: 1; }
+  header .sub { color: #A9D4C7; font-size: 12px; }
+
+  /* Alert banner */
+  .alert {
+    background: #FFF4E5; border-left: 4px solid #F39C12; padding: 14px 18px;
+    font-size: 14px; color: #7A4B00; border-radius: 0; margin-top: 0;
+  }
+  .alert b { color: #B35900; }
+
+  /* Layout */
+  .main-grid { display: grid; grid-template-columns: 1fr 220px; gap: 20px; background: #fff; padding: 20px; border-radius: 0 0 12px 12px; }
+  .left { display: flex; flex-direction: column; gap: 16px; }
+  #qr-container {
+    position: sticky; top: 16px; align-self: start;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    background: #F7FAF9; border: 1px solid #D9E8E3; border-radius: 12px; padding: 16px 12px;
+  }
+  #qr-container .label { font-size: 12px; color: #00604C; font-weight: 700; text-align: center; }
+  #qr-container .hint { font-size: 11px; color: #888; text-align: center; }
+  #qrcode img, #qrcode canvas { display: block; }
+
+  /* Cards */
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 16px 18px; }
+  .card h3 { font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+
+  /* Flight cards */
+  .flight-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 16px 18px; position: relative; }
+  .flight-card.recommended { border-left: 4px solid #00604C; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .badge { background: #00604C; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 700; display: inline-block; margin-bottom: 8px; }
+  .alt-tag { color: #888; font-size: 11px; font-weight: 700; display: inline-block; margin-bottom: 8px; }
+  .leg { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px dashed #EEE; }
+  .leg:last-of-type { border-bottom: none; }
+  .leg .dir { font-size: 22px; font-weight: 800; color: #1A1A2E; white-space: nowrap; }
+  .leg .info { flex: 1; }
+  .leg .flt { font-size: 16px; font-weight: 700; color: #00604C; }
+  .leg .rt { font-size: 13px; color: #555; }
+  .leg .tm { font-size: 14px; color: #333; }
+  .leg .pr { text-align: right; white-space: nowrap; }
+  .leg .pr .hkd { font-size: 18px; font-weight: 800; color: #00604C; }
+  .leg .pr .cny { font-size: 11px; color: #999; }
+  .leg .book a { color: #00604C; font-size: 12px; text-decoration: none; border: 1px solid #00604C; padding: 3px 8px; border-radius: 6px; display: inline-block; margin-top: 4px; }
+  .leg .book a:hover { background: #00604C; color: #fff; }
+  .total { margin-top: 10px; padding-top: 10px; border-top: 2px solid #00604C; display: flex; justify-content: space-between; align-items: center; }
+  .total .lbl { font-size: 13px; color: #555; }
+  .total .amt { font-size: 22px; font-weight: 800; color: #00604C; }
+  .total .meta { font-size: 12px; color: #888; }
+
+  /* Weather grid */
+  .wx-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .wx-cell { background: #F2F8FD; border-radius: 8px; padding: 10px; text-align: center; }
+  .wx-cell .d { font-size: 12px; color: #555; font-weight: 700; }
+  .wx-cell .t { font-size: 22px; font-weight: 800; color: #3498DB; }
+  .wx-cell .desc { font-size: 12px; color: #444; }
+  .wx-cell .w { font-size: 11px; color: #888; }
+
+  /* FX */
+  .fx p { font-size: 15px; }
+  .fx .big { font-size: 24px; font-weight: 800; color: #27AE60; }
+  .fx small { color: #888; font-size: 11px; }
+
+  /* Notes */
+  .notes ul { list-style: none; }
+  .notes li { padding: 8px 0; border-bottom: 1px solid #F4ECDD; font-size: 13px; }
+  .notes li:last-child { border-bottom: none; }
+
+  footer { display: flex; justify-content: space-between; align-items: center; padding: 16px; font-size: 12px; color: #666; flex-wrap: wrap; gap: 8px; }
+  footer .brand { color: #00604C; font-weight: 700; }
+
+  @media (max-width: 767px) {
+    .main-grid { display: flex; flex-direction: column; }
+    #qr-container { display: none; }
+    header h1 { font-size: 16px; }
+    .wx-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="wb-icon">W</div>
+    <div>
+      <h1>Cathay Pacific × WorkBuddy 行程报告 #P-001</h1>
+      <div class="sub">HKG ⇄ PVG · 2026-07-14 / 15 · 国泰航空最抵方案</div>
+    </div>
+    <div class="cp-icon">CP</div>
+  </header>
+
+  <div class="alert">
+    ⚠️ <b>关键冲突提示：</b>7 月 15 日（周三）当天由香港飞往浦东的航班，<b>最早到达为 10:15</b>，国泰（CX）最早到达为 <b>CX316 11:05</b>——<b>任何早班机都无法赶上 09:30 的会议</b>。唯一可行方案为<b>前一晚（7/14 周二）出发、7/15 周三返港</b>。以下方案即按此安排，确保您准时出席会议。
+  </div>
+
+  <div class="main-grid">
+    <div class="left">
+      <!-- Recommended -->
+      <div class="flight-card recommended">
+        <span class="badge">推荐 · 准时开会</span>
+        <div class="leg">
+          <div class="dir">去程</div>
+          <div class="info">
+            <div class="flt">CX362 国泰航空</div>
+            <div class="rt">香港 HKG T1 → 上海浦东 PVG T2</div>
+            <div class="tm">7/14 周二 19:20 ✈ 22:10（直飞 2h50m）</div>
+            <div class="book"><a href="https://s.ly.com/2dkSD76mv" target="_blank">同程预订 ↗</a></div>
+          </div>
+          <div class="pr"><div class="hkd" data-cny="740">HKD —</div><div class="cny">原价 ¥740</div></div>
+        </div>
+        <div class="leg">
+          <div class="dir">回程</div>
+          <div class="info">
+            <div class="flt">CX377 国泰航空</div>
+            <div class="rt">上海浦东 PVG T2 → 香港 HKG T1</div>
+            <div class="tm">7/15 周三 14:30 ✈ 17:25（直飞 2h55m）</div>
+            <div class="book"><a href="https://s.ly.com/mdfPD76Bs" target="_blank">同程预订 ↗</a></div>
+          </div>
+          <div class="pr"><div class="hkd" data-cny="819">HKD —</div><div class="cny">原价 ¥819</div></div>
+        </div>
+        <div class="total">
+          <div><div class="lbl">来回总价（最抵 CX）</div><div class="meta">含税以预订页为准</div></div>
+          <div class="amt" data-cny-total="1559">HKD —</div>
+        </div>
+      </div>
+
+      <!-- Alt 1 -->
+      <div class="flight-card alternate">
+        <span class="alt-tag">备选 1 · 晚出晚归</span>
+        <div class="leg">
+          <div class="dir">去程</div>
+          <div class="info">
+            <div class="flt">CX302 国泰航空</div>
+            <div class="rt">香港 HKG T1 → 上海浦东 PVG T2</div>
+            <div class="tm">7/14 周二 21:05 ✈ 23:55（直飞 2h50m）</div>
+            <div class="book"><a href="https://s.ly.com/3dkSD76nv" target="_blank">同程预订 ↗</a></div>
+          </div>
+          <div class="pr"><div class="hkd" data-cny="740">HKD —</div><div class="cny">原价 ¥740</div></div>
+        </div>
+        <div class="leg">
+          <div class="dir">回程</div>
+          <div class="info">
+            <div class="flt">CX381 国泰航空</div>
+            <div class="rt">上海浦东 PVG T2 → 香港 HKG T1</div>
+            <div class="tm">7/15 周三 19:05 ✈ 21:50（直飞 2h45m）</div>
+            <div class="book"><a href="https://s.ly.com/ndfPD76Cs" target="_blank">同程预订 ↗</a></div>
+          </div>
+          <div class="pr"><div class="hkd" data-cny="819">HKD —</div><div class="cny">原价 ¥819</div></div>
+        </div>
+        <div class="total">
+          <div><div class="lbl">来回总价</div><div class="meta">含税以预订页为准</div></div>
+          <div class="amt" data-cny-total="1559">HKD —</div>
+        </div>
+      </div>
+
+      <!-- Alt 2 -->
+      <div class="flight-card alternate">
+        <span class="alt-tag">备选 2 · 坚持周三出发（⚠️ 错过 09:30 会议）</span>
+        <div class="leg">
+          <div class="dir">去程</div>
+          <div class="info">
+            <div class="flt">CX316 国泰航空</div>
+            <div class="rt">香港 HKG T1 → 上海浦东 PVG T2</div>
+            <div class="tm">7/15 周三 08:10 ✈ 11:05（直飞 2h55m，到达已 11:05）</div>
+            <div class="book"><a href="https://s.ly.com/ldqQD76Lt" target="_blank">同程预订 ↗</a></div>
+          </div>
+          <div class="pr"><div class="hkd" data-cny="1027">HKD —</div><div class="cny">原价 ¥1027</div></div>
+        </div>
+        <div class="leg">
+          <div class="dir">回程</div>
+          <div class="info">
+            <div class="flt">CX377 国泰航空</div>
+            <div class="rt">上海浦东 PVG T2 → 香港 HKG T1</div>
+            <div class="tm">7/15 周三 14:30 ✈ 17:25（直飞 2h55m）</div>
+            <div class="book"><a href="https://s.ly.com/mdfPD76Bs" target="_blank">同程预订 ↗</a></div>
+          </div>
+          <div class="pr"><div class="hkd" data-cny="819">HKD —</div><div class="cny">原价 ¥819</div></div>
+        </div>
+        <div class="total">
+          <div><div class="lbl">来回总价</div><div class="meta">含税以预订页为准</div></div>
+          <div class="amt" data-cny-total="1846">HKD —</div>
+        </div>
+      </div>
+
+      <!-- Weather -->
+      <div class="card weather">
+        <h3>🌤 目的地天气（上海浦东）</h3>
+        <div class="wx-grid">
+          <div class="wx-cell">
+            <div class="d">周二 7/14 · 出发夜</div>
+            <div class="t">34°</div>
+            <div class="desc">阴转多云 · 26–34℃</div>
+            <div class="w">东南风 4–5 级</div>
+          </div>
+          <div class="wx-cell">
+            <div class="d">周三 7/15 · 会议日</div>
+            <div class="t">35°</div>
+            <div class="desc">雨转多云 · 26–35℃</div>
+            <div class="w">南风 &lt;3 级 · 有雨 ☔</div>
+          </div>
+          <div class="wx-cell">
+            <div class="d">周四 7/16</div>
+            <div class="t">34°</div>
+            <div class="desc">雨转多云 · 26–34℃</div>
+            <div class="w">东南风 &lt;3 级</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FX -->
+      <div class="card fx">
+        <h3>💱 实时汇率</h3>
+        <p>1 HKD ≈ <span class="big">0.8676</span> CNY</p>
+        <small>数据日期：2026-07-08 21:51（来源：实时汇率网 / 央行中间价）。票价已按此折算为 HKD，原价 CNY 以小字附注。</small>
+      </div>
+
+      <!-- Notes -->
+      <div class="card notes">
+        <h3>📋 出行须知（国泰航空）</h3>
+        <ul>
+          <li>🛂 <b>入境证件：</b>香港居民持「回乡证」或「港澳居民居住证」免签入境内地；外籍护照请提前办理中国签证。</li>
+          <li>🔋 <b>随身电池：</b>国泰按 IATA 规定，充电宝 / 备用锂电池须随身携带（不可托运）；额定能量 ≤100Wh 免申请，100–160Wh 需航司批准。</li>
+          <li>🚇 <b>机场→市区：</b>浦东机场乘地铁 2 号线直达市中心（约 60–70 分钟），或磁悬浮至龙阳路转地铁更快；出租车约 45 分钟，建议预留 1 小时。会议日有雨，记得带伞。</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- QR -->
+    <div id="qr-container">
+      <div class="label">📱 微信扫码在手机查看</div>
+      <div id="qrcode"></div>
+      <div class="hint">手机微信扫此码<br>打开同一份行程报告</div>
+    </div>
+  </div>
+
+  <footer>
+    <div>生成时间：2026-07-08 21:43 | Steps: 6 | 数据来源：同程 MCP（tc-chengxin）</div>
+    <div class="brand">Powered by WorkBuddy × Cathay Pacific</div>
+  </footer>
+</div>
+
+<script>
+  // FX conversion: 1 HKD = 0.86761563 CNY  =>  HKD = CNY / 0.86761563
+  var RATE = 0.86761563;
+  function toHKD(cny){ return Math.round(cny / RATE); }
+  function fmt(n){ return "HKD " + n.toLocaleString('en-US'); }
+
+  document.querySelectorAll('.hkd[data-cny]').forEach(function(el){
+    el.textContent = fmt(toHKD(parseFloat(el.getAttribute('data-cny'))));
+  });
+  document.querySelectorAll('.amt[data-cny-total]').forEach(function(el){
+    el.textContent = fmt(toHKD(parseFloat(el.getAttribute('data-cny-total'))));
+  });
+
+  // QR Code encodes the live page URL (after CloudStudio deploy this becomes the public URL)
+  (function(){
+    var url = window.location.href;
+    var box = document.getElementById('qrcode');
+    if (typeof QRCode !== 'undefined') {
+      new QRCode(box, { text: url, width: 180, height: 180, colorDark: "#004D3A", colorLight: "#ffffff", correctLevel: QRCode.CorrectLevel.M });
+    } else {
+      // fallback: Google Charts API
+      var img = document.createElement('img');
+      img.src = "https://chart.googleapis.com/chart?chs=180x180&cht=qr&chl=" + encodeURIComponent(url);
+      img.alt = "QR Code";
+      box.appendChild(img);
+    }
+  })();
+</script>
+</body>
+</html>
