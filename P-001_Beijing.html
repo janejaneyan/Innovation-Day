@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cathay Pacific × WorkBuddy · Itinerary #P-001 · HKG ⇌ PEK</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; background: #F0F2F5; color: #1A1A2E;
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 0 40px; }
+
+  /* Header wordmark (text/CSS only) */
+  .brand-header { background: #004D3A; padding: 22px 28px; display: flex; flex-direction: column; gap: 4px;
+    background-image: linear-gradient(135deg,#004D3A 0%,#00604C 100%); }
+  .brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: .3px; }
+  .brand-header .wordmark .x { color: #00B894; padding: 0 4px; }
+  .brand-header .sub { color: rgba(255,255,255,0.72); font-size: 12px; }
+
+  .content { padding: 24px 28px 0; }
+
+  /* Trip meta banner */
+  .trip-meta { background:#fff; border-radius:12px; padding:16px 20px; box-shadow:0 4px 16px rgba(0,0,0,0.06);
+    margin-bottom:22px; display:flex; flex-wrap:wrap; gap:18px; align-items:center; border-left:4px solid #00604C; }
+  .trip-meta .route-big { font-size:20px; font-weight:700; color:#00604C; }
+  .trip-meta .dates { font-size:13px; color:#555; }
+  .trip-meta .note { font-size:12px; color:#B26A00; background:#FFF6E5; padding:6px 10px; border-radius:6px; }
+
+  .main-grid { display: block; }
+  .cards-col { }
+
+  .section-title { font-size:14px; font-weight:700; color:#004D3A; margin:4px 0 12px; letter-spacing:.3px; }
+
+  .flight-card { border-radius:12px; background:#fff; box-shadow:0 4px 16px rgba(0,0,0,0.06);
+    padding:18px 20px; margin-bottom:16px; position:relative; }
+  .flight-card.recommended { border-left:4px solid #00604C; }
+  .flight-card.alternate { border-left:2px solid #CCC; }
+  .badge { display:inline-block; background:#00604C; color:#fff; font-size:11px; font-weight:600;
+    padding:3px 9px; border-radius:4px; margin-bottom:8px; }
+  .alt-label { font-size:11px; color:#999; font-weight:600; text-transform:uppercase; letter-spacing:.5px; }
+  .flight-card h2 { margin:4px 0 6px; font-size:26px; font-weight:700; color:#1A1A2E; }
+  .flight-card .route { font-size:15px; color:#333; margin-bottom:8px; }
+  .flight-card .route .arrow { color:#00604C; padding:0 6px; }
+  .price { font-size:22px; font-weight:700; color:#00604C; }
+  .price .orig { font-size:12px; color:#999; font-weight:400; margin-left:8px; }
+  .meta { font-size:13px; color:#888; margin-top:6px; }
+  .book-links { margin-top:10px; font-size:13px; }
+  .book-links a { color:#00604C; text-decoration:none; font-weight:600; }
+  .book-links a:hover { text-decoration:underline; }
+  .flight-card:hover { transform:translateY(-2px); transition:.2s; box-shadow:0 6px 20px rgba(0,0,0,0.1); }
+
+  .card { border-radius:12px; background:#fff; box-shadow:0 4px 16px rgba(0,0,0,0.06);
+    padding:18px 20px; margin-bottom:16px; }
+  .card h3 { margin:0 0 12px; font-size:15px; }
+  .card.weather { border-left:4px solid #3498DB; }
+  .card.fx { border-left:4px solid #27AE60; }
+  .card.notes { border-left:4px solid #F39C12; }
+
+  .weather-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .wx { text-align:center; background:#F7FAFD; border-radius:10px; padding:12px 8px; }
+  .wx .d { font-size:12px; color:#666; }
+  .wx .t { font-size:22px; font-weight:700; color:#3498DB; margin:4px 0; }
+  .wx .s { font-size:12px; color:#555; }
+  .wx .w { font-size:11px; color:#999; margin-top:2px; }
+
+  .fx p { font-size:20px; font-weight:700; color:#27AE60; margin:4px 0; }
+  .fx small { color:#999; font-size:12px; }
+
+  .notes ul { margin:0; padding-left:20px; }
+  .notes li { font-size:14px; line-height:1.7; margin-bottom:8px; color:#333; }
+
+  /* QR desktop */
+  #qr-container { display:none; }
+  #qr-container .label { font-size:13px; color:#444; margin-top:12px; text-align:center; font-weight:600; }
+  #qrcode { display:flex; justify-content:center; }
+  #qr-mobile { display:flex; flex-direction:column; align-items:center; padding:16px; margin-top:6px;
+    background:#fff; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+  #qr-mobile .label { font-size:12px; color:#555; margin-top:8px; }
+
+  footer { margin:22px 28px 0; padding:16px 20px; background:#fff; border-radius:12px;
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; font-size:12px; color:#888; }
+  footer .r { color:#00604C; font-weight:600; }
+
+  @media (min-width: 768px) {
+    .main-grid { display:grid; grid-template-columns:1fr 260px; gap:24px; align-items:start; }
+    #qr-container { display:flex; flex-direction:column; align-items:center; padding:18px;
+      background:#fff; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.06); position:sticky; top:20px; }
+    #qr-mobile { display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">Itinerary #P-001 · Powered by 同程 MCP · HKG ⇌ PEK</span>
+  </header>
+
+  <div class="content">
+    <div class="trip-meta">
+      <div>
+        <div class="route-big">HKG ⇌ PEK</div>
+        <div class="dates">Outbound: Sun, Jul 19, 2026 · Return: Tue, Jul 21, 2026 · Meeting: Mon, Jul 20 @ 09:00 (Beijing)</div>
+      </div>
+      <div class="note">⚠ A Mon 09:00 meeting isn't reachable by a Monday-morning flight (HKG→PEK ≈ 3h20m). Recommended you arrive <b>Sunday evening Jul 19</b> and stay overnight.</div>
+    </div>
+
+    <div class="main-grid">
+      <div class="cards-col">
+        <div class="section-title">✈ OUTBOUND · HKG → PEK · Sun Jul 19</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended</span>
+          <h2>CX344 · Cathay Pacific</h2>
+          <div class="route">HKG T1 &nbsp;19:00<span class="arrow">✈</span>22:25&nbsp; PEK Capital T3</div>
+          <div class="price">HKD 1,680 <span class="orig">(¥1,451 orig.)</span></div>
+          <div class="meta">⏱ ~3h 25m · Direct · Lands at PEK Capital · Evening arrival, full rest before Mon 9am</div>
+          <div class="book-links">🔗 <a href="https://s.ly.com/vfaLC96Fn" target="_blank">Book on 同程</a></div>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-label">Alt · Cheapest to PEK Capital / morning</span>
+          <h2 style="font-size:20px;">CX334 · Cathay Pacific</h2>
+          <div class="route">HKG T1 &nbsp;07:25<span class="arrow">✈</span>10:45&nbsp; PEK Capital T3</div>
+          <div class="price" style="font-size:18px;">HKD 1,680 <span class="orig">(¥1,451 orig.)</span></div>
+          <div class="meta">⏱ ~3h 20m · Direct · Same fare, morning option if you prefer an early arrival</div>
+          <div class="book-links">🔗 <a href="https://s.ly.com/xfaLC96Hn" target="_blank">Book on 同程</a></div>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-label">Alt · Absolute cheapest (Daxing, not PEK)</span>
+          <h2 style="font-size:20px;">UO234 · HK Express</h2>
+          <div class="route">HKG T2 &nbsp;22:15<span class="arrow">✈</span>01:35&nbsp; Beijing Daxing (PKX)</div>
+          <div class="price" style="font-size:18px;">HKD 967 <span class="orig">(¥835 orig.)</span></div>
+          <div class="meta">⏱ ~3h 20m · Direct · ⚠ Lands at Daxing (not PEK Capital) at 01:35 — cheapest but tight before a 9am meeting</div>
+          <div class="book-links">🔗 <a href="https://s.ly.com/ffaLC96pn" target="_blank">Book on 同程</a></div>
+        </div>
+
+        <div class="section-title" style="margin-top:20px;">✈ RETURN · PEK → HKG · Tue Jul 21</div>
+        <div class="flight-card alternate">
+          <span class="alt-label">Return · lowest fare found</span>
+          <h2 style="font-size:20px;">UO235 · HK Express</h2>
+          <div class="route">Beijing Daxing (PKX) &nbsp;02:35<span class="arrow">✈</span>06:10&nbsp; HKG T1</div>
+          <div class="price" style="font-size:18px;">HKD 593 <span class="orig">(¥512 orig.)</span></div>
+          <div class="meta">⏱ ~3h 35m · Direct · Note: 同程 low-price set returned nearest date Jul 22, not exact Jul 21 — verify Jul 21 availability at booking. For a same-carrier Cathay return, search CX PEK→HKG on Jul 21.</div>
+          <div class="book-links">🔗 <a href="https://s.ly.com/lf7MC96so" target="_blank">Book on 同程</a></div>
+        </div>
+      </div>
+
+      <div id="qr-container">
+        <div id="qrcode"></div>
+        <div class="label">📱 Scan with WeChat<br>to view on mobile</div>
+      </div>
+    </div>
+
+    <div class="card weather" style="margin-top:6px;">
+      <h3>🌤 Beijing Weather (next 3 days)</h3>
+      <div class="weather-grid">
+        <div class="wx"><div class="d">Sun Jul 19</div><div class="t">27°C</div><div class="s">Overcast / Clearing</div><div class="w">NE breeze · rain ~10%</div></div>
+        <div class="wx"><div class="d">Mon Jul 20</div><div class="t">31°C</div><div class="s">Cloudy</div><div class="w">E breeze · rain ~30%</div></div>
+        <div class="wx"><div class="d">Tue Jul 21</div><div class="t">34°C</div><div class="s">Sunny / Cloudy</div><div class="w">SE breeze · rain ~10%</div></div>
+      </div>
+      <small style="color:#999;font-size:11px;display:block;margin-top:10px;">Hot & humid midsummer. Source: ECMWF/中国天气 · fetched 2026-07-16. Some models show scattered thundershowers Jul 19–21 — pack a compact umbrella.</small>
+    </div>
+
+    <div class="card fx">
+      <h3>💱 Live Exchange Rate</h3>
+      <p>1 CNY ≈ 1.158 HKD</p>
+      <small>Rate date: 2026-07-16 · Source: 同程 MCP / interbank reference. All fares shown in HKD (original ¥ in gray).</small>
+    </div>
+
+    <div class="card notes">
+      <h3>📋 Travel Notes</h3>
+      <ul>
+        <li>✈ <b>Travel document:</b> HK→Beijing is a domestic-China route — carry your <b>Home Return Permit (回乡证)</b>; no visa needed. Keep it with your ID for airport & hotel check-in.</li>
+        <li>🔋 <b>Battery / baggage:</b> Power banks must be in carry-on (≤100Wh, no checked). Cathay economy = 1 carry-on 7kg + typically 23–30kg checked. Beijing summer is 30°C+ — pack light, breathable clothes + umbrella.</li>
+        <li>🚇 <b>Airport→city:</b> From PEK Capital, the <b>Capital Airport Express</b> to Sanyuanqiao (~25 min, ¥25) or Didi/taxi to CBD (~40–60 min). Sockets are <b>Type A/C/I, 220V</b> — same as HK plugs fit type-I.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="qr-mobile">
+    <div id="qrcode-mini"></div>
+    <div class="label">Scan to view on mobile</div>
+  </div>
+
+  <footer>
+    <span>Generated: 2026-07-16 15:10 · Steps: 6 · Data Source: 同程 MCP + ECMWF weather</span>
+    <span class="r">Powered by WorkBuddy × Cathay Pacific</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
