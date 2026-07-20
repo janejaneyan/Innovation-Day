@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Itinerary #P-001 · Hong Kong → Paris</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; background: #F0F2F5;
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1A1A2E; }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  /* Header wordmark (text/CSS only) */
+  .brand-header { background: #004D3A; padding: 24px 28px; display: flex; flex-direction: column; gap: 6px;
+    background-image: linear-gradient(135deg, #004D3A 0%, #00604C 100%); }
+  .brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: .2px; }
+  .brand-header .wordmark .x { color: #00B894; padding: 0 4px; }
+  .brand-header .sub { color: rgba(255,255,255,0.72); font-size: 12px; }
+
+  .content { padding: 24px 28px 8px; }
+  .route-line { font-size: 15px; color: #444; margin: 0 0 20px; }
+  .route-line strong { color: #00604C; }
+
+  /* Desktop 2-column + QR */
+  .main-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: start; }
+  .left-col { display: flex; flex-direction: column; gap: 18px; }
+
+  .flight-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    padding: 20px 22px; position: relative; transition: .2s; }
+  .flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .flight-card.recommended { border-left: 4px solid #00604C; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .badge { display: inline-block; background: #00604C; color: #fff; font-size: 11px; font-weight: 600;
+    padding: 3px 9px; border-radius: 4px; margin-bottom: 10px; }
+  .alt-label { font-size: 11px; color: #999; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+  .flight-card h2 { margin: 4px 0 6px; font-size: 26px; font-weight: 700; color: #1A1A2E; }
+  .flight-card .carrier { font-size: 13px; color: #666; margin-bottom: 10px; }
+  .route { font-size: 16px; color: #333; margin: 6px 0; }
+  .route .plane { color: #00604C; padding: 0 6px; }
+  .price { font-size: 22px; font-weight: 700; color: #00604C; margin: 8px 0 2px; }
+  .price .orig { font-size: 12px; color: #999; font-weight: 400; margin-left: 8px; }
+  .meta { font-size: 13px; color: #888; margin-top: 6px; }
+  .book-link { display: inline-block; margin-top: 12px; font-size: 13px; color: #00604C; font-weight: 600;
+    text-decoration: none; border: 1px solid #00604C; padding: 6px 14px; border-radius: 6px; transition: .2s; }
+  .book-link:hover { background: #00604C; color: #fff; }
+  .alt-row { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: baseline; font-size: 14px; color: #444; }
+  .alt-row .price { font-size: 18px; margin: 0; }
+
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); padding: 18px 22px; }
+  .card h3 { margin: 0 0 14px; font-size: 16px; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+
+  .wx-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .wx-day { text-align: center; background: #F7FAFD; border-radius: 10px; padding: 12px 8px; }
+  .wx-day .d { font-size: 12px; color: #888; }
+  .wx-day .t { font-size: 22px; font-weight: 700; color: #3498DB; margin: 4px 0; }
+  .wx-day .s { font-size: 12px; color: #555; }
+
+  .fx p { margin: 0; font-size: 18px; font-weight: 600; }
+  .fx p .cny { color: #666; font-size: 14px; font-weight: 400; }
+  .fx small { color: #999; font-size: 12px; display: block; margin-top: 6px; }
+
+  .notes ul { margin: 0; padding-left: 4px; list-style: none; }
+  .notes li { font-size: 14px; color: #444; line-height: 1.55; margin-bottom: 12px; padding-left: 22px; position: relative; }
+  .notes li:before { content: "✈"; position: absolute; left: 0; color: #F39C12; }
+
+  /* QR desktop */
+  #qr-container { display: flex; flex-direction: column; align-items: center; padding: 18px 16px;
+    background: #FAFBFC; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); position: sticky; top: 20px; }
+  #qr-container .qr-title { font-size: 13px; font-weight: 600; color: #1A1A2E; margin-bottom: 12px; text-align: center; }
+  #qrcode { padding: 8px; background: #fff; border: 1px solid #E5E9EF; border-radius: 8px; }
+  #qr-container .qr-hint { font-size: 11px; color: #888; margin-top: 12px; text-align: center; line-height: 1.5; }
+  #qr-mobile { display: none; }
+
+  footer { margin-top: 24px; background: #E9ECF1; padding: 16px 28px; display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px; font-size: 12px; color: #666; }
+  footer .right { color: #00604C; font-weight: 600; }
+
+  @media (max-width: 767px) {
+    .main-grid { display: flex; flex-direction: column; }
+    #qr-container { display: none; }
+    #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 16px; margin-top: 16px;
+      background: #FAFBFC; border-radius: 12px; }
+    #qr-mobile .qr-hint { font-size: 12px; color: #888; margin-top: 10px; }
+    .brand-header .wordmark { font-size: 16px; }
+    .brand-header .sub { font-size: 11px; }
+    .content { padding: 18px 16px 8px; }
+    .wx-grid { gap: 8px; }
+    .wx-day .t { font-size: 18px; }
+    footer { flex-direction: column; padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">Itinerary #P-001 · Powered by 同程 MCP</span>
+  </header>
+
+  <div class="content">
+    <p class="route-line">Round trip &nbsp;<strong>Hong Kong (HKG) → Paris (CDG)</strong>&nbsp; · &nbsp;Depart Fri 2026-07-24 · Return Mon 2026-07-27</p>
+
+    <div class="main-grid">
+      <div class="left-col">
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended</span>
+          <h2>CX261</h2>
+          <div class="carrier">Cathay Pacific · Direct</div>
+          <div class="route">HKG T1 &nbsp;00:05<span class="plane">✈</span>13:55&nbsp; CDG T2A</div>
+          <div class="price">HKD 6,830 <span class="orig">≈ CNY 5,900 (one-way, outbound)</span></div>
+          <div class="meta">⏱ 13h 50m · Fri 2026-07-24 · Overnight red-eye · Non-stop</div>
+          <a class="book-link" href="https://s.ly.com/EgRnBa6vY" target="_blank" rel="noopener">Book on 同程 →</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-label">Alternative</span>
+          <div class="alt-row" style="margin-top:8px;">
+            <span><strong>AF185</strong> · Air France</span>
+            <span>HKG T1 22:20 ✈ 05:50 CDG T2E</span>
+            <span class="price">HKD 8,490 <span class="orig">≈ CNY 7,335</span></span>
+            <span>⏱ 13h 30m · Direct</span>
+          </div>
+          <a class="book-link" href="https://s.ly.com/RgpmBa6gX" target="_blank" rel="noopener">Book on 同程 →</a>
+        </div>
+
+        <div class="card weather">
+          <h3>🌤 Paris Weather (trip window)</h3>
+          <div class="wx-grid">
+            <div class="wx-day"><div class="d">Fri 07-24</div><div class="t">30°/16°</div><div class="s">Sunny · &lt;10% rain</div></div>
+            <div class="wx-day"><div class="d">Sat 07-25</div><div class="t">35°/20°</div><div class="s">Sunny · ~15% rain</div></div>
+            <div class="wx-day"><div class="d">Sun 07-26</div><div class="t">31°/18°</div><div class="s">Sunny · ~35% rain</div></div>
+          </div>
+          <p style="font-size:12px;color:#999;margin:12px 0 0;">Hot &amp; sunny spell — pack light, bring sunglasses; a compact umbrella for Sun–Mon. Source: web forecast, 2026-07-20.</p>
+        </div>
+
+        <div class="card fx">
+          <h3>💱 Live Exchange Rate</h3>
+          <p>1 CNY ≈ 1.157 HKD &nbsp; <span class="cny">| 1 EUR ≈ 8.97 HKD</span></p>
+          <small>Fares from 同程 are quoted in CNY and converted to HKD above. Rate date: 2026-07-20 · Source: XE / market mid-rate.</small>
+        </div>
+
+        <div class="card notes">
+          <h3>📌 Airline Travel Notes</h3>
+          <ul>
+            <li><strong>Visa:</strong> France is in the Schengen Area. HKSAR passport holders enjoy visa-free entry up to 90 days — carry return ticket + hotel proof. (BN(O)/other passports: check Schengen rules before departure.)</li>
+            <li><strong>Batteries &amp; power:</strong> Spare lithium batteries / power banks (≤100Wh) must go in carry-on only, never checked. France uses Type E sockets, 230V — bring a EU adapter.</li>
+            <li><strong>CDG → city:</strong> RER B train to central Paris ~35–45 min (~€11.80); or Roissybus to Opéra. Taxi flat fare to Right Bank €56 / Left Bank €65. Cathay economy baggage: typically 2×23kg checked.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div id="qr-container">
+        <div class="qr-title">📱 Scan with WeChat<br>to view on mobile</div>
+        <div id="qrcode"></div>
+        <div class="qr-hint">Open this page on desktop,<br>then scan to continue on your phone.</div>
+      </div>
+    </div>
+
+    <div id="qr-mobile">
+      <div id="qrcode-mini"></div>
+      <div class="qr-hint">Scan to view on mobile</div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="left">Generated 2026-07-20 · Steps: 6 · Data source: 同程 MCP + live web</span>
+    <span class="right">Powered by WorkBuddy × Cathay Pacific</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
