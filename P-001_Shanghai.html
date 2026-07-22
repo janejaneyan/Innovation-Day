@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Itinerary P-001 · HKG→PVG · Cathay Pacific × WorkBuddy</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #F0F2F5; color: #1A1A2E; -webkit-font-smoothing: antialiased; }
+
+/* Header wordmark (text only) */
+.brand-header { background: #004D3A; padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+.brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; }
+.brand-header .wordmark .x { color: #00B894; }
+.brand-header .sub { color: rgba(255,255,255,0.7); font-size: 12px; }
+
+/* Container */
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+/* Desktop grid */
+.main-grid { display: grid; gap: 24px; }
+
+@media (min-width: 768px) {
+  .main-grid { grid-template-columns: 1fr 240px; }
+  #qr-container { display: flex; flex-direction: column; align-items: center; padding: 16px; background: #FAFBFC; border-radius: 12px; position: sticky; top: 20px; }
+  #qr-mobile { display: none; }
+}
+
+@media (max-width: 767px) {
+  .main-grid { grid-template-columns: 1fr; }
+  #qr-container { display: none; }
+  #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 12px; margin-top: 16px; }
+  .brand-header .wordmark { font-size: 16px; }
+  .brand-header .sub { font-size: 11px; }
+}
+
+/* Cards */
+.card { background: #FFF; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); padding: 20px; margin-bottom: 24px; transition: transform 0.2s; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+
+.flight-card.recommended { border-left: 4px solid #00604C; }
+.flight-card .badge { display: inline-block; background: #00604C; color: #fff; font-size: 12px; padding: 4px 10px; border-radius: 4px; margin-bottom: 8px; font-weight: 600; }
+.flight-card h2 { font-size: 28px; font-weight: 700; color: #1A1A2E; margin-bottom: 4px; }
+.flight-card .route { font-size: 16px; color: #333; margin-bottom: 8px; }
+.flight-card .price { font-size: 22px; font-weight: 700; color: #00604C; margin-bottom: 4px; }
+.flight-card .meta { font-size: 13px; color: #888; }
+.flight-card .orig-price { font-size: 12px; color: #999; }
+
+.flight-card.alternate { border-left: 2px solid #CCC; padding: 16px; }
+.flight-card.alternate .alt-label { font-size: 11px; color: #999; text-transform: uppercase; margin-bottom: 4px; }
+.flight-card.alternate .alt-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.flight-card.alternate .alt-row .fn { font-weight: 700; color: #1A1A2E; font-size: 16px; }
+.flight-card.alternate .alt-row .t { color: #555; font-size: 14px; }
+.flight-card.alternate .alt-row .p { font-weight: 700; color: #00604C; font-size: 16px; }
+
+.card.weather { border-left: 4px solid #3498DB; }
+.card.weather h3 { color: #2C3E50; margin-bottom: 16px; font-size: 16px; }
+.weather-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.weather-day { text-align: center; }
+.weather-day .date { font-size: 13px; color: #888; margin-bottom: 4px; }
+.weather-day .temp { font-size: 20px; font-weight: 700; color: #3498DB; }
+.weather-day .summary { font-size: 12px; color: #555; margin-top: 4px; }
+
+.card.fx { border-left: 4px solid #27AE60; }
+.card.fx h3 { color: #2C3E50; margin-bottom: 12px; font-size: 16px; }
+.card.fx .rate { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.card.fx small { font-size: 11px; color: #888; }
+
+.card.notes { border-left: 4px solid #F39C12; }
+.card.notes h3 { color: #2C3E50; margin-bottom: 12px; font-size: 16px; }
+.card.notes ul { list-style: none; padding: 0; }
+.card.notes ul li { padding: 6px 0; font-size: 14px; line-height: 1.6; color: #444; }
+.card.notes ul li::before { content: "✈ "; color: #F39C12; }
+
+.info-banner { background: #FFF3CD; border: 1px solid #FFEAA7; border-radius: 8px; padding: 12px 16px; margin-bottom: 24px; font-size: 13px; color: #856404; line-height: 1.6; }
+
+footer { background: #F0F2F5; padding: 16px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #888; border-top: 1px solid #E0E0E0; }
+footer strong { color: #00604C; }
+</style>
+</head>
+<body>
+
+<header class="brand-header">
+  <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+  <span class="sub">Itinerary P-001 · Powered by 同程 MCP</span>
+</header>
+
+<div class="container">
+  <div class="info-banner">
+    ⚠ <strong>Schedule note:</strong> No CX flight to PVG arrives before 9:30 AM (earliest CX316 arrives 11:05). 
+    The recommended CX316 departs HKG 08:10 — earliest available CX option for a full day in Shanghai. 
+    Return CX381 departs PVG 19:05, giving you the full day for your 9:30 meeting.
+  </div>
+
+  <div class="main-grid">
+    <!-- Left column: content cards -->
+    <div class="content-cards">
+      
+      <!-- Recommended Outbound -->
+      <div class="flight-card recommended">
+        <span class="badge">★ Recommended Outbound</span>
+        <h2>CX316</h2>
+        <div class="route">HKG T1 08:10 ✈ PVG T2 11:05</div>
+        <div class="price">HKD 1,188</div>
+        <div class="orig-price">Original fare: ¥1,026 (CNY) · Duration: 2h55m · Direct · A330</div>
+        <div class="meta">Wed, Jul 29 · Earliest CX morning flight</div>
+      </div>
+
+      <!-- Return -->
+      <div class="flight-card recommended">
+        <span class="badge">★ Recommended Return</span>
+        <h2>CX381</h2>
+        <div class="route">PVG T2 19:05 ✈ HKG T1 21:50</div>
+        <div class="price">HKD 949</div>
+        <div class="orig-price">Original fare: ¥819 (CNY) · Duration: 2h45m · Direct</div>
+        <div class="meta">Wed, Jul 29 · Evening return after meeting</div>
+      </div>
+
+      <!-- Total -->
+      <div class="flight-card recommended" style="border-left-color:#00B894; background: linear-gradient(135deg, #F0FFF4, #FFF);">
+        <span class="badge" style="background:#00B894;">💰 Round Trip Total</span>
+        <div class="price" style="font-size:26px;">HKD 2,137</div>
+        <div class="orig-price">¥1,845 (CNY) · CX316 HKG→PVG + CX381 PVG→HKG</div>
+      </div>
+
+      <!-- Alternative Options -->
+      <h3 style="font-size:14px; color:#888; margin: 16px 0 8px;">Alternative Options</h3>
+      
+      <div class="flight-card alternate">
+        <div class="alt-label">Alt Outbound</div>
+        <div class="alt-row">
+          <span class="fn">CX368</span>
+          <span class="t">HKG 09:20 → PVG 12:05 · 2h45m</span>
+          <span class="p">HKD 1,188</span>
+        </div>
+        <div class="orig-price" style="font-size:11px;">¥1,026 (CNY)</div>
+      </div>
+
+      <div class="flight-card alternate">
+        <div class="alt-label">Alt Return</div>
+        <div class="alt-row">
+          <span class="fn">CX367</span>
+          <span class="t">PVG 13:20 → HKG 16:15 �� 2h55m</span>
+          <span class="p">HKD 949</span>
+        </div>
+        <div class="orig-price" style="font-size:11px;">¥819 (CNY) · Afternoon return</div>
+      </div>
+
+      <!-- Weather Card -->
+      <div class="card weather">
+        <h3>☁ Shanghai Weather (Next 3 Days)</h3>
+        <div class="weather-grid">
+          <div class="weather-day">
+            <div class="date">Jul 29 (Wed)</div>
+            <div class="temp">25~27°C</div>
+            <div class="summary">🌧 Rain · SE 5-6</div>
+          </div>
+          <div class="weather-day">
+            <div class="date">Jul 30 (Thu)</div>
+            <div class="temp">26~29��C</div>
+            <div class="summary">🌦 Rain→Cloudy · SE 5-6</div>
+          </div>
+          <div class="weather-day">
+            <div class="date">Jul 31 (Fri)</div>
+            <div class="temp">27~30°C</div>
+            <div class="summary">☁ Cloudy→Overcast · SE 5-6</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exchange Rate Card -->
+      <div class="card fx">
+        <h3>💱 Live Exchange Rate</h3>
+        <div class="rate">1 HKD ≈ 0.86 CNY &nbsp;|&nbsp; 1 CNY ≈ 1.16 HKD</div>
+        <small>Rate date: 2026-07-22, Source: XE (mid-market rate)</small>
+      </div>
+
+      <!-- Travel Notes Card -->
+      <div class="card notes">
+        <h3>📋 Travel Notes (Hong Kong → Shanghai, China)</h3>
+        <ul>
+          <li><strong>Visa / Entry:</strong> Hong Kong SAR passport holders require a valid travel permit (回乡证) for mainland China. Foreign nationals should verify visa requirements before travel.</li>
+          <li><strong>Carry-on Battery Rules:</strong> Power banks & lithium batteries ≤ 100Wh must be carried in cabin baggage only. Items 100-160Wh require airline approval. Never pack in checked luggage.</li>
+          <li><strong>Airport → City:</strong> PVG to central Shanghai by taxi (~50 min, ¥200-250), Metro Line 2 (~70 min), or Maglev (~8 min to Longyang Road). Allow 1 hour for immigration & baggage.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Right column: QR Code (desktop) -->
+    <div id="qr-container">
+      <h4 style="color:#1A1A2E; font-size:14px; margin-bottom:12px;">📱 Scan with WeChat<br>to view on mobile</h4>
+      <div id="qrcode" style="margin-bottom:12px;"></div>
+      <p style="font-size:11px; color:#888; text-align:center;">Opens this itinerary on your phone</p>
+    </div>
+  </div>
+
+  <!-- Mobile QR (bottom) -->
+  <div id="qr-mobile">
+    <h4 style="color:#1A1A2E; font-size:13px; margin-bottom:8px;">📱 Scan to view on mobile</h4>
+    <div id="qrcode-mini"></div>
+  </div>
+</div>
+
+<footer>
+  <span>Generated at: <span id="gen-time"></span> · Steps: 6 · Data: 同程 MCP</span>
+  <span>Powered by <strong>WorkBuddy</strong> × <strong>Cathay Pacific</strong></span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+    var now = new Date();
+    document.getElementById('gen-time').textContent = now.toLocaleString('en-GB', { timeZone: 'Asia/Hong_Kong' }) + ' HKT';
+  })();
+</script>
+
+</body>
+</html>
