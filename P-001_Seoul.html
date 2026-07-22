@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cathay Pacific × WorkBuddy · Seoul Itinerary #P-001</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; background: #F0F2F5;
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color: #1A1A2E; }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  /* Header wordmark */
+  .brand-header { background: #004D3A; padding: 24px 28px; display: flex; flex-direction: column; gap: 6px; }
+  .brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: .3px; }
+  .brand-header .wordmark .x { color: #00B894; margin: 0 4px; }
+  .brand-header .sub { color: rgba(255,255,255,0.72); font-size: 12px; }
+
+  .content { padding: 24px 28px 8px; }
+  .main-grid { }
+  .col-left { display: flex; flex-direction: column; gap: 18px; }
+
+  /* Flight cards */
+  .flight-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); padding: 20px 22px; transition: .2s; }
+  .flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .flight-card.recommended { border-left: 4px solid #00604C; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .badge { display: inline-block; background: #00604C; color: #fff; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 4px; margin-bottom: 10px; }
+  .alt-label { color: #999; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+  .flight-card h2 { margin: 4px 0 6px; font-size: 26px; }
+  .flight-card .airline { font-size: 13px; color: #00604C; font-weight: 600; margin-bottom: 8px; }
+  .route { font-size: 16px; color: #333; margin-bottom: 6px; }
+  .route .arrow { color: #00604C; margin: 0 6px; }
+  .price { font-size: 22px; font-weight: 700; color: #00604C; }
+  .price .orig { font-size: 12px; color: #999; font-weight: 400; margin-left: 8px; }
+  .meta { font-size: 13px; color: #888; margin-top: 6px; }
+  .alt-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 14px; margin-top: 4px; }
+  .alt-row .an { font-size: 17px; font-weight: 600; }
+  .alt-row .ap { color: #00604C; font-weight: 700; }
+  .book-link { display:inline-block; margin-top:10px; font-size:13px; color:#00604C; text-decoration:none; border:1px solid #00604C; padding:5px 12px; border-radius:6px; }
+  .book-link:hover { background:#00604C; color:#fff; }
+
+  /* Info cards */
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); padding: 18px 22px; }
+  .card h3 { margin: 0 0 12px; font-size: 16px; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+  .wx-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .wx-day { text-align: center; background: #F7F9FB; border-radius: 8px; padding: 12px 8px; }
+  .wx-day .d { font-size: 12px; color: #888; }
+  .wx-day .t { font-size: 22px; font-weight: 700; color: #3498DB; margin: 4px 0; }
+  .wx-day .s { font-size: 12px; color: #555; }
+  .fx p { margin: 4px 0; font-size: 17px; font-weight: 600; }
+  .fx small { color: #999; font-size: 12px; }
+  .notes ul { margin: 0; padding-left: 18px; }
+  .notes li { margin-bottom: 10px; font-size: 14px; line-height: 1.5; }
+
+  /* QR */
+  #qr-container { display: flex; flex-direction: column; align-items: center; padding: 20px 16px; background: #FAFBFC; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); height: fit-content; }
+  #qr-container .qr-title { font-size: 13px; font-weight: 600; margin-bottom: 12px; text-align:center; }
+  #qrcode { padding: 8px; background:#fff; border:1px solid #E5E8EB; border-radius: 8px; }
+  #qr-container .qr-sub { font-size: 12px; color: #888; margin-top: 12px; text-align:center; }
+  #qr-mobile { display: none; }
+
+  footer { margin-top: 20px; background: #F0F2F5; padding: 16px 28px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #888; border-top: 1px solid #E1E4E8; }
+  footer .pw { color: #00604C; font-weight: 600; }
+
+  @media (min-width: 768px) {
+    .main-grid { display: grid; grid-template-columns: 1fr 260px; gap: 24px; align-items: start; }
+  }
+  @media (max-width: 767px) {
+    .main-grid { display: flex; flex-direction: column; }
+    #qr-container { display: none; }
+    #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 16px; margin-top: 4px; background:#FAFBFC; border-radius:12px; }
+    #qr-mobile .qr-sub { font-size: 12px; color:#888; margin-top: 10px; }
+    #qrcode-mini { padding:6px; background:#fff; border:1px solid #E5E8EB; border-radius:8px; }
+    .brand-header .wordmark { font-size: 16px; }
+    .brand-header .sub { font-size: 11px; }
+    .wx-grid { grid-template-columns: repeat(3,1fr); }
+    .flight-card h2 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">Itinerary #P-001 · Seoul (4 days) · Powered by 同程 MCP</span>
+  </header>
+
+  <div class="content">
+    <div class="main-grid">
+      <div class="col-left">
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended · Outbound</span>
+          <div class="airline">Cathay Pacific</div>
+          <h2>CX434</h2>
+          <div class="route">HKG T1 <b>07:55</b> <span class="arrow">✈</span> ICN T1 <b>12:40</b></div>
+          <div class="price">HKD 965 <span class="orig">(¥1,122)</span></div>
+          <div class="meta">⏱ ~3h 45m · Direct · Tue Jul 28 · Daytime (no red-eye) · Arrive midday → half a shopping day left</div>
+          <a class="book-link" href="https://s.ly.com/uhZ49b6td" target="_blank">Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-label">Alternative · Outbound</span>
+          <div class="alt-row">
+            <span class="an">CX418 · Cathay Pacific</span>
+            <span>HKG T1 14:25 ✈ ICN T1 19:05</span>
+            <span class="ap">HKD 965</span>
+            <span style="color:#888;font-size:13px;">~3h 40m · Direct · afternoon</span>
+          </div>
+          <a class="book-link" href="https://s.ly.com/shZ49b6rd" target="_blank">Book on 同程</a>
+        </div>
+
+        <div class="card weather">
+          <h3>🌤 Seoul Weather (arrival window)</h3>
+          <div class="wx-grid">
+            <div class="wx-day"><div class="d">Jul 28 Tue</div><div class="t">30° / 23°</div><div class="s">Light drizzle · UV 7</div></div>
+            <div class="wx-day"><div class="d">Jul 29 Wed</div><div class="t">31° / 23°</div><div class="s">Warm, muggy · UV 7</div></div>
+            <div class="wx-day"><div class="d">Jul 30 Thu</div><div class="t">29° / 23°</div><div class="s">Scattered showers</div></div>
+          </div>
+          <small style="color:#999;display:block;margin-top:10px;">Peak-summer monsoon: hot, humid, sudden thunderstorms. Pack a compact umbrella + breathable clothes. Source: weatheryear / KMA outlook, 2026-07-22.</small>
+        </div>
+
+        <div class="card fx">
+          <h3>💱 Live Exchange Rate</h3>
+          <p>1 HKD ≈ 188.7 KRW</p>
+          <p style="font-size:14px;color:#555;font-weight:500;">1 CNY ≈ 0.86 HKD (fares converted from RMB)</p>
+          <small>Rate date: 2026-07-22 · Sources: FX plugin (HKD/KRW) + Bank of China (CNY/HKD, 07-20)</small>
+        </div>
+
+        <div class="card notes">
+          <h3>✈ Travel Notes (Seoul)</h3>
+          <ul>
+            <li><b>Entry / K-ETA:</b> HKSAR passport holders enter visa-free (short stay). Check whether K-ETA pre-registration is required for your passport before departure — apply online at least 72h ahead if needed.</li>
+            <li><b>Power &amp; battery:</b> Korea uses <b>Type C/F sockets, 220V</b> — bring an adapter. Spare lithium power banks must go in <b>carry-on only</b> (never checked); keep under 100Wh.</li>
+            <li><b>Airport → city &amp; shopping:</b> AREX express train ICN → Seoul Station ~43 min. Tax-refund (~10%) at Myeongdong / Hongdae / Gangnam / duty-free — keep receipts and passport, claim refund kiosks before security at ICN.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div id="qr-container">
+        <div class="qr-title">📱 Scan with WeChat<br>to view on mobile</div>
+        <div id="qrcode"></div>
+        <div class="qr-sub">Open this page on desktop,<br>then scan to carry it in your pocket.</div>
+      </div>
+    </div>
+
+    <div id="qr-mobile">
+      <div id="qrcode-mini"></div>
+      <div class="qr-sub">Scan to view on mobile</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Generated: 2026-07-22 · Steps: 6 · Data Source: 同程 MCP + live weather/FX</span>
+    <span class="pw">Powered by WorkBuddy × Cathay Pacific</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
