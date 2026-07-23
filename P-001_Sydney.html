@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cathay Pacific x WorkBuddy — Itinerary P-001: Hong Kong → Sydney</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #F0F2F5;
+  color: #1A1A2E;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+/* Header — text/CSS wordmark only */
+.brand-header {
+  background: linear-gradient(135deg, #004D3A 0%, #00604C 100%);
+  padding: 20px 24px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.brand-header .wordmark {
+  color: #fff; font-size: 22px; font-weight: 700;
+  display: flex; align-items: center; gap: 6px;
+}
+.brand-header .wordmark .x { color: #00B894; font-weight: 400; }
+.brand-header .sub { color: rgba(255,255,255,0.7); font-size: 12px; }
+
+/* Main grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 24px;
+  padding: 24px 0;
+}
+
+/* Cards */
+.card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card h3 { font-size: 15px; margin-bottom: 12px; color: #555; font-weight: 600; }
+
+/* Flight cards */
+.flight-card {
+  background: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  padding: 20px;
+  margin-bottom: 12px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.flight-card.recommended { border-left: 4px solid #00604C; }
+.flight-card.alternate { border-left: 2px solid #CCC; }
+.flight-card .badge {
+  display: inline-block;
+  background: #00604C; color: #fff;
+  font-size: 11px; font-weight: 600;
+  padding: 2px 10px; border-radius: 4px;
+  margin-bottom: 8px;
+}
+.flight-card .alt-label {
+  display: inline-block;
+  color: #999; font-size: 11px; font-weight: 600;
+  padding: 2px 10px;
+  margin-bottom: 8px;
+}
+.flight-card h2 { font-size: 28px; font-weight: 700; color: #1A1A2E; margin-bottom: 6px; }
+.flight-card .route { font-size: 16px; color: #333; margin-bottom: 4px; }
+.flight-card .route .arrow { color: #00604C; margin: 0 8px; }
+.flight-card .price { font-size: 22px; font-weight: 700; color: #00604C; margin: 8px 0 4px; }
+.flight-card .price-note { font-size: 11px; color: #888; }
+.flight-card .meta { font-size: 13px; color: #888; display: flex; gap: 16px; flex-wrap: wrap; margin-top: 4px; }
+
+/* Weather card */
+.weather { border-left: 4px solid #3498DB; }
+.weather-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.weather-day { text-align: center; padding: 10px 6px; }
+.weather-day .day-label { font-size: 12px; color: #888; font-weight: 600; margin-bottom: 4px; }
+.weather-day .temp { font-size: 22px; font-weight: 700; color: #3498DB; }
+.weather-day .lo { font-size: 12px; color: #666; }
+.weather-day .desc { font-size: 12px; color: #555; margin-top: 2px; }
+.weather-day .wind { font-size: 10px; color: #999; margin-top: 2px; }
+
+/* FX card */
+.fx { border-left: 4px solid #27AE60; }
+.fx .rate { font-size: 18px; font-weight: 700; color: #27AE60; }
+.fx small { color: #888; font-size: 11px; }
+
+/* Notes card */
+.notes { border-left: 4px solid #F39C12; }
+.notes ul { list-style: none; padding: 0; }
+.notes li { padding: 8px 0; border-bottom: 1px solid #F0F2F5; font-size: 13px; color: #444; }
+.notes li:last-child { border-bottom: none; }
+.notes li .icon { margin-right: 6px; }
+
+/* QR Container */
+#qr-container {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 16px; background: #FAFBFC; border-radius: 12px;
+  position: sticky; top: 20px;
+}
+#qr-container p { font-size: 12px; color: #666; margin-top: 10px; text-align: center; }
+#qr-mobile { display: none; }
+
+/* Footer */
+.footer {
+  background: #F0F2F5;
+  padding: 16px 24px;
+  display: flex; justify-content: space-between;
+  font-size: 11px; color: #888;
+  border-top: 1px solid #E0E4E8;
+}
+.footer .right { color: #00604C; font-weight: 600; }
+
+/* Section title */
+.section-title {
+  font-size: 13px; font-weight: 700; color: #999; text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 8px;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .main-grid { display: flex; flex-direction: column; }
+  #qr-container { display: none; }
+  #qr-mobile {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 12px; margin-top: 16px;
+  }
+  #qr-mobile p { font-size: 11px; color: #666; margin-top: 6px; text-align: center; }
+  .brand-header .wordmark { font-size: 16px; }
+  .brand-header .sub { font-size: 11px; }
+  .weather-grid { grid-template-columns: repeat(2, 1fr); }
+  .flight-card h2 { font-size: 22px; }
+  .flight-card .price { font-size: 18px; }
+  .footer { flex-direction: column; gap: 4px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<header class="brand-header">
+  <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+  <span class="sub">Itinerary #P-001 · Powered by 同程 MCP</span>
+</header>
+
+<div class="container">
+  <div class="main-grid">
+
+    <!-- LEFT COLUMN -->
+    <div>
+
+      <div class="section-title">✈️ Flights — Hong Kong ↔ Sydney</div>
+
+      <!-- Recommended Flight -->
+      <div class="flight-card recommended">
+        <span class="badge">★ Cheapest — Recommended</span>
+        <h2>CX139</h2>
+        <div class="route">HKG <span class="arrow">✈</span> SYD</div>
+        <div class="meta">📅 Fri, 24 Jul 2026 · 🕘 09:10 → 20:10</div>
+        <div class="meta">⏱ ~9h 00m · 🔵 Direct · ✈️ Airbus A350</div>
+        <div class="price">HKD 6,920</div>
+        <div class="price-note">Original: ¥6,349 CNY · Estimated roundtrip</div>
+      </div>
+
+      <!-- Alternative Flight -->
+      <div class="flight-card alternate">
+        <span class="alt-label">Alternative</span>
+        <h2>CX111</h2>
+        <div class="route">HKG <span class="arrow">✈</span> SYD</div>
+        <div class="meta">📅 Fri, 24 Jul 2026 · 🕘 19:05 → 06:10 (+1)</div>
+        <div class="meta">⏱ ~9h 05m · 🔵 Direct · ✈️ Boeing 777</div>
+        <div class="price">HKD 8,517</div>
+        <div class="price-note">Original: ¥7,814 CNY · Evening departure, arrive morning</div>
+      </div>
+
+      <!-- Weather Card -->
+      <div class="card weather">
+        <h3>🌤 Destination Weather — Sydney, NSW</h3>
+        <div class="weather-grid">
+          <div class="weather-day">
+            <div class="day-label">Fri · Jul 24</div>
+            <div class="temp">16°C</div>
+            <div class="lo">Low 8°C</div>
+            <div class="desc">☀️ Sunny</div>
+            <div class="wind">🌬 WSW 15-22 km/h</div>
+          </div>
+          <div class="weather-day">
+            <div class="day-label">Sat · Jul 25</div>
+            <div class="temp">19°C</div>
+            <div class="lo">Low 7°C</div>
+            <div class="desc">☀️ Sunny</div>
+            <div class="wind">🌬 W 15-20 km/h</div>
+          </div>
+          <div class="weather-day">
+            <div class="day-label">Sun · Jul 26</div>
+            <div class="temp">18°C</div>
+            <div class="lo">Low 10°C</div>
+            <div class="desc">⛅ Partly Cloudy</div>
+            <div class="wind">🌬 Light winds</div>
+          </div>
+          <div class="weather-day">
+            <div class="day-label">Mon · Jul 27</div>
+            <div class="temp">19°C</div>
+            <div class="lo">Low 9°C</div>
+            <div class="desc">☀️ Mostly Sunny</div>
+            <div class="wind">🌬 Light winds</div>
+          </div>
+          <div class="weather-day" style="grid-column: span 1;">
+            <div class="day-label">Summary</div>
+            <div class="desc" style="font-size:11px;margin-top:8px;">
+              Crisp winter days. No rain expected. Pack a warm jacket for mornings (7-8°C). Pleasant afternoons around 16-19°C. UV index: Moderate (3-4).
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FX Card -->
+      <div class="card fx">
+        <h3>💱 Live Exchange Rate</h3>
+        <div class="rate">1 HKD ≈ 0.1820 AUD</div>
+        <div style="margin-top:4px;font-size:13px;color:#555;">1 AUD ≈ 5.496 HKD</div>
+        <small>Source: Reserve Bank of Australia · Rate date: 21 Jul 2026</small>
+      </div>
+
+      <!-- Travel Notes -->
+      <div class="card notes">
+        <h3>📋 Airline Travel Notes</h3>
+        <ul>
+          <li><span class="icon">🛂</span> <strong>ETA Visa Required:</strong> HKSAR passport holders must apply for an Australian Electronic Travel Authority (ETA) online before departure. Apply via the official Australian ETA app — approval is usually instant.</li>
+          <li><span class="icon">🔌</span> <strong>Power Adapter Needed:</strong> Australia uses Type I sockets (230V, 3 flat pins in V-shape). Hong Kong uses Type G (BS 1363). Bring a universal travel adapter.</li>
+          <li><span class="icon">🚆</span> <strong>Airport to CBD:</strong> T8 Airport Line train to Central Station in ~13 min (~AUD 18 / HKD 99). Taxi or rideshare ~AUD 45-55 (HKD 247-302).</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN — QR Code (Desktop) -->
+    <div id="qr-container">
+      <div id="qrcode"></div>
+      <p>📱 Scan with WeChat<br>to view on mobile</p>
+    </div>
+
+  </div>
+
+  <!-- Mobile QR -->
+  <div id="qr-mobile">
+    <div id="qrcode-mini"></div>
+    <p>📱 Scan to view on mobile</p>
+  </div>
+</div>
+
+<footer class="footer">
+  <span>Generated: 23 Jul 2026, 10:30 HKT · Steps: 5 · Data: 同程 MCP · Weather: BOM Australia · FX: RBA</span>
+  <span class="right">Powered by WorkBuddy × Cathay Pacific</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+
+</body>
+</html>
