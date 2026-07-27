@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HKG ⇄ Tokyo Itinerary · Jul 30 – Aug 2, 2026</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F0F2F5; font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; -webkit-font-smoothing: antialiased; color: #1A1A2E; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px 32px; }
+
+  .brand-header { background: #004D3A; padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+  .brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; }
+  .brand-header .wordmark .x { color: #00B894; }
+  .brand-header .sub { color: rgba(255,255,255,0.7); font-size: 12px; max-width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .main-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; margin-top: 24px; }
+  #qr-container { display: flex; flex-direction: column; align-items: center; padding: 16px; background: #FAFBFC; border-radius: 12px; align-self: start; position: sticky; top: 16px; }
+  #qr-container p { font-size: 12px; color: #555; text-align: center; margin: 10px 0 0; }
+
+  .leg-label { font-size: 16px; font-weight: 700; color: #004D3A; margin: 16px 0 8px; padding-left: 4px; }
+
+  .flight-card { background: #fff; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); border-left: 4px solid #00604C; transition: transform 0.2s, box-shadow 0.2s; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .badge { display: inline-block; background: #00604C; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; }
+  .alt-label { display: inline-block; color: #999; font-size: 11px; font-weight: 700; margin-bottom: 6px; }
+  .flight-card h2 { font-size: 28px; font-weight: 700; color: #1A1A2E; margin: 0 0 6px; }
+  .flight-card .route { font-size: 16px; color: #333; margin-bottom: 4px; }
+  .flight-card .price { font-size: 22px; font-weight: 700; color: #00604C; margin-bottom: 2px; }
+  .flight-card .orig { font-size: 11px; color: #aaa; margin-bottom: 4px; }
+  .flight-card .meta { font-size: 13px; color: #888; }
+
+  .btn-tongcheng { display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C; color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none; text-align: center; transition: background 0.2s; }
+  .btn-tongcheng:hover { background: #c92c2e; }
+
+  .card { background: #fff; border-radius: 12px; padding: 18px; margin-top: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .card h3 { margin: 0 0 12px; font-size: 16px; color: #1A1A2E; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+  .wx-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  .wx-cell { text-align: center; padding: 10px 6px; background: #F7FBFE; border-radius: 8px; }
+  .wx-cell .d { font-size: 12px; color: #666; font-weight: 700; }
+  .wx-cell .t { font-size: 20px; color: #3498DB; font-weight: 700; margin: 4px 0; }
+  .wx-cell .s { font-size: 11px; color: #888; }
+  .fx p { font-size: 15px; margin: 0 0 6px; }
+  .fx small { color: #aaa; font-size: 11px; }
+  .notes ul { margin: 0; padding-left: 18px; }
+  .notes li { font-size: 14px; line-height: 1.7; color: #333; }
+
+  footer { margin-top: 24px; padding: 16px; background: #F0F2F5; display: flex; justify-content: space-between; flex-wrap: wrap; font-size: 12px; color: #777; }
+  footer .right { color: #00604C; font-weight: 700; }
+
+  #qr-mobile { display: none; }
+
+  @media (max-width: 767px) {
+    .main-grid { display: flex; flex-direction: column; }
+    #qr-container { display: none; }
+    #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 12px; margin-top: 16px; }
+    #qr-mobile p { font-size: 12px; color: #555; margin: 10px 0 0; }
+    #qr-mobile #qrcode-mini { transform: scale(0.6); transform-origin: top center; }
+    .brand-header .wordmark { font-size: 16px; }
+    .brand-header .sub { font-size: 11px; white-space: normal; }
+    .wx-grid { grid-template-columns: repeat(2, 1fr); }
+    .btn-tongcheng { width: 100%; }
+    footer { flex-direction: column; gap: 6px; }
+  }
+</style>
+</head>
+<body>
+<header class="brand-header">
+  <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+  <span class="sub">End of month, four days in Tokyo for an exhibition. No red-eyes — Jul 30 to Aug 2, 2026</span>
+</header>
+
+<div class="wrap">
+  <div class="main-grid">
+    <div class="flights">
+      <div class="leg-label">✈ OUTBOUND · Thu Jul 30, 2026 · HKG → Tokyo (NRT)</div>
+
+      <div class="flight-card recommended">
+        <span class="badge">★ Recommended</span>
+        <h2>CX526</h2>
+        <div class="route">HKG T1 08:15 ✈ Tokyo NRT T2 13:40</div>
+        <div class="price">HKD 2,671</div>
+        <div class="orig">≈ ¥2,305 (CNY) · fare converted at 1.1589</div>
+        <div class="meta">⏱ ~4h 25m | Direct | Airbus A350 | Daytime, no red-eye</div>
+        <a href="https://s.ly.com/wiSbgc6or" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+
+      <div class="flight-card alternate">
+        <span class="alt-label">Alt</span>
+        <h2>CX500</h2>
+        <div class="route">HKG T1 15:20 ✈ Tokyo NRT T2 20:50</div>
+        <div class="price">HKD 2,671</div>
+        <div class="orig">≈ ¥2,305 (CNY)</div>
+        <div class="meta">⏱ ~4h 30m | Direct | Same price · later daytime departure</div>
+        <a href="https://s.ly.com/xiSbgc6pr" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+
+      <div class="leg-label">✈ INBOUND · Sun Aug 2, 2026 · Tokyo (NRT) → HKG</div>
+
+      <div class="flight-card recommended">
+        <span class="badge">★ Recommended</span>
+        <h2>CX521</h2>
+        <div class="route">Tokyo NRT T2 17:15 ✈ HKG T1 21:10</div>
+        <div class="price">HKD 4,192</div>
+        <div class="orig">≈ ¥3,617 (CNY) · fare converted at 1.1589</div>
+        <div class="meta">⏱ ~4h 55m | Direct | Daytime departure, land HKG same night</div>
+        <a href="https://s.ly.com/jikfgc6Dv" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+
+      <div class="flight-card alternate">
+        <span class="alt-label">Alt</span>
+        <h2>CX509</h2>
+        <div class="route">Tokyo NRT T2 09:25 ✈ HKG T1 13:15</div>
+        <div class="price">HKD 5,928</div>
+        <div class="orig">≈ ¥5,117 (CNY)</div>
+        <div class="meta">⏱ ~4h 50m | Direct | Morning flight — maximize last day in Tokyo</div>
+        <a href="https://s.ly.com/mikfgc6Gv" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+    </div>
+
+    <div id="qr-container">
+      <div id="qrcode"></div>
+      <p>📱 Scan with WeChat<br>to view on mobile</p>
+    </div>
+  </div>
+
+  <div class="card weather">
+    <h3>Destination Weather (Jul 30 – Aug 2, 2026)</h3>
+    <div class="wx-grid">
+      <div class="wx-cell"><div class="d">Thu Jul 30</div><div class="t">27–33°C</div><div class="s">Mostly sunny · ~10% rain</div></div>
+      <div class="wx-cell"><div class="d">Fri Jul 31</div><div class="t">27–34°C</div><div class="s">Partly cloudy · humid</div></div>
+      <div class="wx-cell"><div class="d">Sat Aug 1</div><div class="t">29–35°C</div><div class="s">Partly cloudy · light rain late</div></div>
+      <div class="wx-cell"><div class="d">Sun Aug 2</div><div class="t">29–34°C</div><div class="s">Light rain after 6pm · ~50%</div></div>
+    </div>
+  </div>
+
+  <div class="card fx">
+    <h3>Live Exchange Rate</h3>
+    <p>1 CNY ≈ <strong>1.1589 HKD</strong> &nbsp;|&nbsp; 1 JPY ≈ 0.0479 HKD</p>
+    <small>Rate date: 2026-07-27 09:45 · Source: 同程 MCP / exchange-rate feed</small>
+  </div>
+
+  <div class="card notes">
+    <h3>Travel Notes</h3>
+    <ul>
+      <li>🛂 <strong>Visa:</strong> HKSAR passport holders are visa-free for short stays in Japan (up to 90 days). Bring a passport valid 6+ months.</li>
+      <li>🔌 <strong>Power:</strong> Japan uses Type A sockets (two flat pins), 100V. Your HK Type G plug won't fit — pack a Type A adapter.</li>
+      <li>🚆 <strong>Airport → city:</strong> From Narita (NRT), take the Narita Express (N'EX) or Airport Limousine Bus to central Tokyo (~60–90 min). N'EX is easiest with exhibition luggage.</li>
+    </ul>
+  </div>
+
+  <div id="qr-mobile">
+    <div id="qrcode-mini"></div>
+    <p>Scan to view on mobile</p>
+  </div>
+</div>
+
+<footer>
+  <span>Generated at: 2026-07-27 09:45 | Steps: 5 | Data Source: 同程 MCP</span>
+  <span class="right">Powered by WorkBuddy × Cathay Pacific</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
