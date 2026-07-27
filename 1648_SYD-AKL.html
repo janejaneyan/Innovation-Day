@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HKG → SYD → AKL → HKG — Cathay Pacific × WorkBuddy</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #F0F2F5;
+  color: #1A1A2E;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* === HEADER === */
+.brand-header {
+  background: #004D3A;
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 0 0 6px 6px;
+}
+.brand-header .wordmark {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.brand-header .wordmark .x { color: #00B894; }
+.brand-header .sub {
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* === MAIN CONTAINER === */
+.container { max-width: 1200px; margin: 24px auto; padding: 0 20px; }
+
+/* === TIMELINE BAR === */
+.timeline-bar {
+  background: linear-gradient(135deg, #00604C 0%, #00876A 100%);
+  border-radius: 10px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.timeline-dot {
+  background: #fff;
+  color: #00604C;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.timeline-arrow { color: #fff; font-size: 18px; font-weight: 700; }
+.timeline-days {
+  color: rgba(255,255,255,0.85);
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+/* === MAIN GRID === */
+.main-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; }
+
+/* === LEG LABEL === */
+.leg-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #004D3A;
+  margin: 20px 0 10px 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.leg-label .icon { font-size: 20px; }
+.leg-warning {
+  display: inline-block;
+  background: #FDF2D0;
+  color: #8B6914;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 8px;
+  font-weight: 500;
+}
+
+/* === FLIGHT CARDS === */
+.flight-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.flight-card.recommended { border-left: 4px solid #00604C; }
+.flight-card.alternate { border-left: 2px solid #CCC; opacity: 0.9; }
+
+.badge {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  background: #00604C;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.flight-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1A1A2E;
+  margin-bottom: 4px;
+}
+.flight-card .route {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 6px;
+}
+.flight-card .route .arrow { color: #00604C; margin: 0 6px; }
+.flight-card .price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #00604C;
+  margin-bottom: 4px;
+}
+.flight-card .price .original {
+  font-size: 12px;
+  color: #888;
+  font-weight: 400;
+  margin-left: 6px;
+}
+.flight-card .meta {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.flight-card .meta span { white-space: nowrap; }
+
+/* === BOOKING BUTTON === */
+.btn-tongcheng {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 10px 24px;
+  background: #E4393C;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 6px;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s;
+}
+.btn-tongcheng:hover { background: #c92c2e; }
+
+/* === SUMMARY CARD === */
+.summary-card {
+  background: linear-gradient(135deg, #00604C 0%, #00876A 100%);
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  color: #fff;
+}
+.summary-card h3 { font-size: 14px; opacity: 0.85; margin-bottom: 8px; }
+.summary-card .total {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.summary-card .breakdown {
+  font-size: 12px;
+  opacity: 0.8;
+  line-height: 1.8;
+}
+
+/* === CARDS (weather, fx, notes) === */
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.card h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+.card.weather { border-left: 4px solid #3498DB; }
+.card.fx { border-left: 4px solid #27AE60; }
+.card.notes { border-left: 4px solid #F39C12; }
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.weather-city { font-weight: 700; font-size: 12px; color: #00604C; margin-bottom: 6px; }
+.weather-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 4px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.weather-row .temp { color: #3498DB; font-weight: 700; }
+.weather-row .date { color: #666; }
+
+.fx-rates { font-size: 14px; line-height: 2; }
+.fx-rates strong { color: #00604C; }
+
+.card.notes ul { list-style: none; padding: 0; }
+.card.notes li {
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.card.notes li:last-child { border-bottom: none; }
+.card.notes li .note-icon { margin-right: 8px; }
+
+/* === QR CODE (desktop) === */
+#qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  background: #FAFBFC;
+  border-radius: 12px;
+  position: sticky;
+  top: 20px;
+}
+#qr-container .qr-label {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 10px;
+  text-align: center;
+}
+#qr-container canvas { border: 2px solid #e0e0e0; border-radius: 8px; }
+
+/* === MOBILE QR === */
+#qr-mobile { display: none; }
+
+/* === FOOTER === */
+footer {
+  max-width: 1200px;
+  margin: 24px auto 0;
+  padding: 16px 28px;
+  background: #F0F2F5;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  color: #888;
+}
+footer .right { color: #00604C; font-weight: 600; }
+
+/* === RESPONSIVE === */
+@media (max-width: 767px) {
+  .brand-header { padding: 14px 16px; }
+  .brand-header .wordmark { font-size: 16px; }
+  .brand-header .sub { font-size: 11px; }
+  .main-grid { display: flex; flex-direction: column; }
+  #qr-container { display: none; }
+  #qr-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    margin-top: 16px;
+  }
+  #qr-mobile canvas { border: 2px solid #e0e0e0; border-radius: 6px; }
+  .qr-label-mobile { font-size: 11px; color: #888; margin-bottom: 8px; }
+  .timeline-bar { gap: 6px; padding: 12px 16px; }
+  .timeline-dot { font-size: 11px; padding: 3px 10px; }
+  .timeline-arrow { font-size: 14px; }
+  .flight-card { padding: 14px 16px; }
+  .flight-card h2 { font-size: 22px; }
+  .flight-card .price { font-size: 18px; }
+  .btn-tongcheng { width: 100%; }
+  .weather-grid { grid-template-columns: 1fr; }
+  .summary-card .total { font-size: 24px; }
+  footer { flex-direction: column; text-align: center; }
+}
+
+@media (min-width: 768px) {
+  #qr-mobile { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="brand-header">
+  <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+  <span class="sub">HKG → SYD → AKL → HKG within 8 days, at least 36h each city, all CX metal</span>
+</header>
+
+<div class="container">
+
+<!-- TIMELINE -->
+<div class="timeline-bar">
+  <span class="timeline-dot">Jul 28 HKG</span>
+  <span class="timeline-arrow">→</span>
+  <span class="timeline-dot">Jul 28-30 SYD</span>
+  <span class="timeline-days">~42h</span>
+  <span class="timeline-arrow">→</span>
+  <span class="timeline-dot">Jul 30-Aug 1 AKL</span>
+  <span class="timeline-days">~45h</span>
+  <span class="timeline-arrow">→</span>
+  <span class="timeline-dot">Aug 1 HKG</span>
+</div>
+
+<div class="main-grid">
+<div class="flights-col">
+
+<!-- PRICE SUMMARY -->
+<div class="summary-card">
+  <h3>💰 Total Recommended (2/3 legs CX metal)</h3>
+  <div class="total">HKD 49,821</div>
+  <div class="breakdown">
+    HKG→SYD CX111: HKD 42,490 &nbsp;|&nbsp;
+    SYD→AKL NZ104: HKD 2,797 &nbsp;|&nbsp;
+    AKL→HKG CX198: HKD 4,534
+  </div>
+</div>
+
+<!-- ===== LEG 1: HKG → SYD ===== -->
+<div class="leg-label"><span class="icon">✈</span> OUTBOUND — HKG → SYD <span style="font-size:12px;color:#888;font-weight:400;">Jul 28 (Tue)</span></div>
+
+<div class="flight-card recommended">
+  <span class="badge">★ Recommended</span>
+  <h2>CX111</h2>
+  <div class="route">HKG T1 <span class="arrow">→</span> SYD T1</div>
+  <div class="price">HKD 42,490 <span class="original">(¥36,629)</span></div>
+  <div class="meta">
+    <span>⏱ 9h 5m</span><span>🔵 Direct</span><span>🛫 19:05</span><span>🛬 06:10 (+1)</span><span>✈ A350</span>
+  </div>
+  <a href="https://s.ly.com/2iXfmc6ZB" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+</div>
+
+<div class="flight-card alternate">
+  <h2 style="font-size:20px;">QF128 <span style="font-size:11px;color:#888;font-weight:400;">(Qantas — not CX)</span></h2>
+  <div class="route">HKG T1 <span class="arrow">→</span> SYD T1</div>
+  <div class="price">HKD 11,187 <span class="original">(¥9,644)</span></div>
+  <div class="meta">
+    <span>⏱ 9h 15m</span><span>🔵 Direct</span><span>🛫 19:30</span><span>🛬 06:45 (+1)</span>
+  </div>
+  <a href="https://s.ly.com/yiHhmc6fD" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+</div>
+<div style="font-size:11px;color:#888;margin:-6px 0 4px 8px;">⚠ CX111 is ~3.8× the Qantas fare — Cathay premium pricing on this date</div>
+
+<!-- ===== LEG 2: SYD → AKL ===== -->
+<div class="leg-label"><span class="icon">✈</span> SYD → AKL <span style="font-size:12px;color:#888;font-weight:400;">Jul 30 (Thu)</span><span class="leg-warning">⚠ No CX metal on this route</span></div>
+<div style="font-size:12px;color:#B8860B;margin:-8px 0 10px 8px;">Cathay Pacific does not operate trans-Tasman flights (SYD↔AKL). Best alternatives below.</div>
+
+<div class="flight-card recommended" style="border-left-color:#3498DB;">
+  <span class="badge" style="background:#3498DB;">★ Best Pick</span>
+  <h2>NZ104</h2>
+  <div class="route">SYD T1 <span class="arrow">→</span> AKL I</div>
+  <div class="price">HKD 2,797 <span class="original">(¥2,411)</span></div>
+  <div class="meta">
+    <span>⏱ 3h 0m</span><span>🔵 Direct</span><span>🛫 11:55</span><span>🛬 16:55</span><span>✈ Air New Zealand</span>
+  </div>
+  <a href="https://s.ly.com/bi0fmc6bB" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+</div>
+
+<div class="flight-card alternate">
+  <h2 style="font-size:20px;">TN1432 <span style="font-size:11px;color:#888;font-weight:400;">(Air Tahiti Nui)</span></h2>
+  <div class="route">SYD T1 <span class="arrow">→</span> AKL I</div>
+  <div class="price">HKD 2,516 <span class="original">(¥2,169)</span></div>
+  <div class="meta">
+    <span>⏱ 3h 5m</span><span>🔵 Direct</span><span>🛫 17:50</span><span>🛬 22:55</span>
+  </div>
+  <a href="https://s.ly.com/8i0fmc68B" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+</div>
+
+<!-- ===== LEG 3: AKL → HKG ===== -->
+<div class="leg-label"><span class="icon">✈</span> INBOUND — AKL → HKG <span style="font-size:12px;color:#888;font-weight:400;">Aug 1 (Sat)</span></div>
+
+<div class="flight-card recommended">
+  <span class="badge">★ Recommended</span>
+  <h2>CX198</h2>
+  <div class="route">AKL I <span class="arrow">→</span> HKG T1</div>
+  <div class="price">HKD 4,534 <span class="original">(¥3,909)</span></div>
+  <div class="meta">
+    <span>⏱ 11h 40m</span><span>🔵 Direct</span><span>🛫 13:25</span><span>🛬 21:05</span><span>✈ A350</span>
+  </div>
+  <a href="https://s.ly.com/7i0fmc67B" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+</div>
+
+<div class="flight-card alternate">
+  <h2 style="font-size:20px;">CX7402 <span style="font-size:11px;color:#888;font-weight:400;">(CX codeshare)</span></h2>
+  <div class="route">AKL I <span class="arrow">→</span> HKG T1</div>
+  <div class="price">HKD 5,404 <span class="original">(¥4,659)</span></div>
+  <div class="meta">
+    <span>⏱ 11h 30m</span><span>🔵 Direct</span><span>🛫 10:15</span><span>🛬 17:45</span>
+  </div>
+  <a href="https://s.ly.com/oiehmc6CD" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+</div>
+
+<!-- WEATHER -->
+<div class="card weather">
+  <h3>🌤 Destination Weather (next 3 days per city)</h3>
+  <div class="weather-grid">
+    <div>
+      <div class="weather-city">🇦🇺 Sydney (Jul 28–30)</div>
+      <div class="weather-row"><span class="date">Jul 28 Tue</span><span class="temp">20° / 11°</span><span>Scattered clouds, 9h sun</span></div>
+      <div class="weather-row"><span class="date">Jul 29 Wed</span><span class="temp">17° / 10°</span><span>Clear, 10h sun, wind 26km/h W</span></div>
+      <div class="weather-row"><span class="date">Jul 30 Thu</span><span class="temp">16° / 8°</span><span>Clear, 10h sun</span></div>
+    </div>
+    <div>
+      <div class="weather-city">🇳🇿 Auckland (Jul 30–Aug 2)</div>
+      <div class="weather-row"><span class="date">Jul 30 Thu</span><span class="temp">15° / 10°</span><span>Drizzle, 78% humidity</span></div>
+      <div class="weather-row"><span class="date">Jul 31 Fri</span><span class="temp">10° / 7°</span><span>Drizzle, windy</span></div>
+      <div class="weather-row"><span class="date">Aug 1 Sat</span><span class="temp">11° / 7°</span><span>Clear sky ☀</span></div>
+      <div class="weather-row"><span class="date">Aug 2 Sun</span><span class="temp">11° / 4°</span><span>Clear sky ☀</span></div>
+    </div>
+  </div>
+  <div style="font-size:11px;color:#888;margin-top:8px;">🧥 Sydney winter layers recommended; Auckland bring rain jacket for Jul 30-31.</div>
+</div>
+
+<!-- FX RATES -->
+<div class="card fx">
+  <h3>💱 Live Exchange Rates</h3>
+  <div class="fx-rates">
+    <div><strong>1 HKD</strong> = 0.1821 AUD (Australian Dollar)</div>
+    <div><strong>1 HKD</strong> = 0.2199 NZD (New Zealand Dollar)</div>
+    <div><strong>1 CNY</strong> ≈ 1.16 HKD (conversion for 同程 pricing)</div>
+    <div style="font-size:11px;color:#888;margin-top:4px;">Rate date: 2026-07-27 | Source: BOC HK / FX plugin</div>
+  </div>
+</div>
+
+<!-- TRAVEL NOTES -->
+<div class="card notes">
+  <h3>📋 Airline Travel Notes</h3>
+  <ul>
+    <li><span class="note-icon">🛂</span><strong>Visa:</strong> HKSAR passport = visa-free for Australia (ETA required, apply via app) &amp; New Zealand (NZeTA required, apply online). Apply at least 72h before departure.</li>
+    <li><span class="note-icon">🔋</span><strong>Carry-on Batteries:</strong> Power banks &amp; lithium batteries MUST be in carry-on, not checked luggage. Max 100Wh per battery. Spare batteries individually protected.</li>
+    <li><span class="note-icon">🧳</span><strong>Baggage:</strong> CX economy: 1×23kg checked + 1×7kg carry-on. Air NZ (SYD→AKL): 1×23kg checked. Verify exact allowance at booking — codeshare may differ.</li>
+    <li><span class="note-icon">🔌</span><strong>Power Sockets:</strong> Australia = Type I (230V, angled 3-pin). New Zealand = Type I (same as Australia). Bring one universal adapter — works for both countries.</li>
+    <li><span class="note-icon">🚆</span><strong>Airport Transfer:</strong> SYD Airport → City: Train (Airport Link, ~AUD 19, 13min). AKL Airport → City: SkyDrive bus (~NZD 18, 40min) or taxi (~NZD 65).</li>
+  </ul>
+</div>
+
+</div><!-- .flights-col -->
+
+<!-- QR CODE (desktop) -->
+<div id="qr-container">
+  <div class="qr-label">📱 Scan with WeChat<br>to view on mobile</div>
+  <div id="qrcode"></div>
+</div>
+
+</div><!-- .main-grid -->
+
+<!-- QR CODE (mobile) -->
+<div id="qr-mobile">
+  <div class="qr-label-mobile">📱 Scan with WeChat to view on mobile</div>
+  <div id="qrcode-mini"></div>
+</div>
+
+</div><!-- .container -->
+
+<footer>
+  <span>Generated at: 2026-07-27 16:48 HKT | Data Source: 同程 MCP | Weather: BOM / MetService</span>
+  <span class="right">Powered by WorkBuddy × Cathay Pacific</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+(function() {
+  var url = window.location.href;
+  try {
+    new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+    new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+  } catch (e) {
+    var el = document.getElementById('qrcode');
+    if (el) el.innerHTML = '<p style="color:#888;font-size:12px;">QR failed. URL: ' + url + '</p>';
+  }
+})();
+</script>
+
+</body>
+</html>
