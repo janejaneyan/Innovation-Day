@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HKG ⇄ Taipei Round-Trip — Xiaolongbao Weekend</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; background: #F0F2F5;
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color: #1A1A2E; }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+
+  /* Header wordmark */
+  .brand-header { background: #004D3A; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px; }
+  .brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: .3px; }
+  .brand-header .wordmark .x { color: #00B894; margin: 0 4px; }
+  .brand-header .sub { color: rgba(255,255,255,0.72); font-size: 12px; max-width: 92%;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .body-pad { padding: 24px; }
+
+  /* Main grid: flights left, QR right */
+  .main-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: start; }
+  .leg-label { font-size: 16px; font-weight: 800; color: #004D3A; margin: 4px 0 10px; }
+  .leg-label.second { margin-top: 22px; }
+
+  .flight-card { background: #fff; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: .2s; }
+  .flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .flight-card.recommended { border-left: 4px solid #00604C; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .badge { display: inline-block; background: #00604C; color: #fff; font-size: 11px; font-weight: 700;
+    padding: 3px 9px; border-radius: 4px; margin-bottom: 8px; }
+  .alt-tag { display: inline-block; color: #999; font-size: 11px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+  .fl-no { font-size: 26px; font-weight: 800; color: #1A1A2E; margin: 2px 0; }
+  .fl-no .air { font-size: 13px; font-weight: 600; color: #00604C; margin-left: 8px; }
+  .route { font-size: 15px; color: #333; margin: 4px 0; }
+  .route .arr { color: #00604C; margin: 0 6px; font-weight: 700; }
+  .price { font-size: 21px; font-weight: 800; color: #00604C; margin: 6px 0 2px; }
+  .price .per { font-size: 12px; font-weight: 500; color: #888; }
+  .orig { font-size: 11px; color: #aaa; }
+  .meta { font-size: 12px; color: #888; margin-top: 3px; }
+  .btn-tongcheng { display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C;
+    color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none;
+    text-align: center; transition: background .2s; }
+  .btn-tongcheng:hover { background: #c92c2e; }
+
+  /* QR */
+  #qr-container { display: flex; flex-direction: column; align-items: center; padding: 18px 14px;
+    background: #FAFBFC; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); position: sticky; top: 20px; }
+  #qr-container .qr-title { font-size: 13px; font-weight: 700; color: #004D3A; margin-bottom: 12px; text-align: center; }
+  #qrcode { padding: 8px; background: #fff; border: 1px solid #E5E8EB; border-radius: 8px; }
+  #qr-container .qr-note { font-size: 11px; color: #999; margin-top: 10px; text-align: center; line-height: 1.5; }
+  #qr-mobile { display: none; }
+
+  /* Info cards */
+  .card { background: #fff; border-radius: 12px; padding: 18px 20px; margin-top: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .card h3 { margin: 0 0 12px; font-size: 16px; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+  .wx-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .wx-day { text-align: center; padding: 12px 8px; background: #F7FAFD; border-radius: 10px; }
+  .wx-day .d { font-size: 13px; color: #555; font-weight: 600; }
+  .wx-day .t { font-size: 26px; font-weight: 800; color: #3498DB; margin: 6px 0; }
+  .wx-day .s { font-size: 12px; color: #777; line-height: 1.4; }
+  .fx p { margin: 4px 0; font-size: 15px; }
+  .fx small { color: #999; font-size: 11px; }
+  .notes ul { margin: 0; padding-left: 4px; list-style: none; }
+  .notes li { font-size: 14px; line-height: 1.7; color: #444; padding: 6px 0; border-bottom: 1px dashed #eee; }
+  .notes li:last-child { border-bottom: none; }
+  .notes li b { color: #C77700; }
+
+  footer { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+    padding: 18px 24px; margin-top: 20px; font-size: 12px; color: #888; }
+  footer .r { color: #00604C; font-weight: 700; }
+
+  @media (max-width: 767px) {
+    .main-grid { display: flex; flex-direction: column; }
+    #qr-container { display: none; }
+    #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 16px; margin-top: 18px;
+      background: #FAFBFC; border-radius: 12px; }
+    #qr-mobile .qr-title { font-size: 12px; color: #004D3A; font-weight: 700; margin-bottom: 10px; }
+    #qrcode-mini { padding: 6px; background: #fff; border: 1px solid #E5E8EB; border-radius: 8px; }
+    .brand-header .wordmark { font-size: 16px; }
+    .brand-header .sub { font-size: 11px; }
+    .btn-tongcheng { width: 100%; }
+    .wx-grid { grid-template-columns: 1fr; }
+    .fl-no { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">Fly HKG to Taipei Saturday for xiaolongbao, back Sunday, two people.</span>
+  </header>
+
+  <div class="body-pad">
+    <div class="main-grid">
+      <!-- FLIGHTS -->
+      <div>
+        <div class="leg-label">✈ OUTBOUND · Sat 1 Aug 2026 · HKG → Taipei (TPE)</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended</span>
+          <div class="fl-no">CX488<span class="air">Cathay Pacific</span></div>
+          <div class="route">HKG 08:00 <span class="arr">✈</span> TPE 09:50</div>
+          <div class="price">HKD 1,325 <span class="per">/ person · HKD 2,650 for 2</span></div>
+          <div class="orig">Original fare ¥1,145 CNY · economy</div>
+          <div class="meta">⏱ 1h 50m · Direct · Airbus A350 · lands mid-morning, prime lunch-dumpling timing 🥟</div>
+          <a href="https://www.ly.com/flights/itinerary/oneway/HKG-TPE?date=2026-08-01&from=%E9%A6%99%E6%B8%AF&to=%E5%8F%B0%E5%8C%97" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-tag">Alternative</span>
+          <div class="fl-no">CX530<span class="air">Cathay Pacific</span></div>
+          <div class="route">HKG 08:35 <span class="arr">✈</span> TPE 10:25</div>
+          <div class="price">HKD 1,120 <span class="per">/ person · HKD 2,240 for 2</span></div>
+          <div class="orig">Original fare ¥968 CNY · economy · cheapest outbound</div>
+          <div class="meta">⏱ 1h 50m · Direct · Airbus A330-300</div>
+          <a href="https://www.ly.com/flights/itinerary/oneway/HKG-TPE?date=2026-08-01&from=%E9%A6%99%E6%B8%AF&to=%E5%8F%B0%E5%8C%97" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="leg-label second">✈ INBOUND · Sun 2 Aug 2026 · Taipei (TPE) → HKG</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended</span>
+          <div class="fl-no">CX495<span class="air">Cathay Pacific</span></div>
+          <div class="route">TPE 13:20 <span class="arr">✈</span> HKG 15:20</div>
+          <div class="price">HKD 1,680 <span class="per">/ person · HKD 3,360 for 2</span></div>
+          <div class="orig">CX economy · afternoon departure</div>
+          <div class="meta">⏱ 2h 00m · Direct · leaves the morning free for one last soup-dumpling brunch</div>
+          <a href="https://www.ly.com/flights/itinerary/oneway/TPE-HKG?date=2026-08-02&from=%E5%8F%B0%E5%8C%97&to=%E9%A6%99%E6%B8%AF" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-tag">Alternative</span>
+          <div class="fl-no">CX407<span class="air">Cathay Pacific</span></div>
+          <div class="route">TPE 08:00 <span class="arr">✈</span> HKG 10:00</div>
+          <div class="price">HKD 1,680 <span class="per">/ person · HKD 3,360 for 2</span></div>
+          <div class="orig">CX economy · early morning · home by lunch</div>
+          <div class="meta">⏱ 2h 00m · Direct · Airbus A330-300</div>
+          <a href="https://www.ly.com/flights/itinerary/oneway/TPE-HKG?date=2026-08-02&from=%E5%8F%B0%E5%8C%97&to=%E9%A6%99%E6%B8%AF" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+      </div>
+
+      <!-- QR (desktop) -->
+      <div id="qr-container">
+        <div class="qr-title">📱 Scan with WeChat<br>to view on mobile</div>
+        <div id="qrcode"></div>
+        <div class="qr-note">Open this page's public link,<br>then scan to carry it in your pocket.</div>
+      </div>
+    </div>
+
+    <!-- WEATHER -->
+    <div class="card weather">
+      <h3>🌤 Taipei Weather · Trip Window</h3>
+      <div class="wx-grid">
+        <div class="wx-day"><div class="d">Sat 1 Aug (arrive)</div><div class="t">24–34°C</div><div class="s">Cloudy, chance of showers · rain ~40% · light NW wind &lt;3</div></div>
+        <div class="wx-day"><div class="d">Sun 2 Aug (depart)</div><div class="t">24–33°C</div><div class="s">Cloudy turning to rain · rain ~55% · light W wind &lt;3</div></div>
+        <div class="wx-day"><div class="d">Mon 3 Aug</div><div class="t">25–35°C</div><div class="s">Rain likely · hot &amp; humid · pack a compact umbrella ☔</div></div>
+      </div>
+    </div>
+
+    <!-- FX -->
+    <div class="card fx">
+      <h3>💱 Live Exchange Rate</h3>
+      <p>1 HKD ≈ 4.13 TWD &nbsp;·&nbsp; 1 HKD ≈ 0.86 CNY</p>
+      <p style="font-size:13px;color:#666;">(≈ 1 TWD = 0.242 HKD · 1 CNY = 1.157 HKD — all fares above converted to HKD)</p>
+      <small>Rate date: 2026-07-27 · Source: open.er-api.com · fares cross-checked vs Cathay Pacific &amp; Ctrip live listings</small>
+    </div>
+
+    <!-- NOTES -->
+    <div class="card notes">
+      <h3>📝 Travel Notes</h3>
+      <ul>
+        <li><b>Entry (HK residents):</b> HK permanent residents use the 台胞證 (Taiwan Compatriot Permit / 入台證) — arrange the online 網簽 before departure; it's quick but not visa-free, so don't leave it to the airport.</li>
+        <li><b>Batteries &amp; power:</b> Power banks/spare lithium batteries carry-on only, never checked. Taipei uses <b>Type A/B sockets, 110V</b> — HK's 220V chargers need a plug adapter (most phone/laptop bricks are dual-voltage, just check the label).</li>
+        <li><b>Airport → city &amp; dumpling logistics:</b> Taoyuan (TPE) → downtown via <b>Airport MRT ~38 min to Taipei Main (NT$150)</b>. The classic xiaolongbao pilgrimage: Din Tai Fung 鼎泰豐 (Xinyi flagship) — go off-peak or expect a queue. Cathay economy HKG⇄TPE includes <b>30kg checked baggage</b>, plenty for a weekend.</li>
+      </ul>
+    </div>
+
+    <!-- QR (mobile) -->
+    <div id="qr-mobile">
+      <div class="qr-title">Scan to view on mobile</div>
+      <div id="qrcode-mini"></div>
+    </div>
+
+    <footer>
+      <span>Generated 2026-07-27 12:50 · Steps: 6 · Data: Cathay Pacific + Ctrip live listings (同程 gateway 401, one fallback pass)</span>
+      <span class="r">Powered by WorkBuddy × Cathay Pacific</span>
+    </footer>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
