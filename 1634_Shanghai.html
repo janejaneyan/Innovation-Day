@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shanghai Weekend Itinerary — HKG ⇄ Shanghai</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; background: #F0F2F5;
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #1A1A2E; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding-bottom: 24px; }
+
+  /* Header wordmark */
+  .brand-header { background: #004D3A; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px; }
+  .brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: .2px; }
+  .brand-header .wordmark .x { color: #00B894; padding: 0 4px; }
+  .brand-header .sub { color: rgba(255,255,255,0.78); font-size: 12px; max-width: 90%;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .section-pad { padding: 0 24px; }
+  .main-grid { margin-top: 20px; }
+  .leg-label { font-size: 17px; font-weight: 700; color: #004D3A; margin: 18px 0 10px; padding-left: 2px; }
+
+  .flight-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    padding: 18px 20px; margin-bottom: 14px; transition: .2s; }
+  .flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .flight-card.recommended { border-left: 4px solid #00604C; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .badge { display: inline-block; background: #00604C; color: #fff; font-size: 11px; font-weight: 700;
+    padding: 3px 9px; border-radius: 4px; margin-bottom: 8px; }
+  .alt-label { display: inline-block; color: #999; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+  .fno { font-size: 26px; font-weight: 800; color: #1A1A2E; }
+  .fno small { font-size: 13px; font-weight: 600; color: #666; margin-left: 8px; }
+  .route { font-size: 16px; color: #333; margin: 8px 0 4px; }
+  .route .arrow { color: #00604C; font-weight: 700; padding: 0 6px; }
+  .price { font-size: 22px; font-weight: 800; color: #00604C; margin: 6px 0 2px; }
+  .price .orig { font-size: 12px; color: #999; font-weight: 500; margin-left: 8px; }
+  .meta { font-size: 13px; color: #888; }
+  .btn-tongcheng { display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C;
+    color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none;
+    text-align: center; transition: background .2s; }
+  .btn-tongcheng:hover { background: #c92c2e; }
+
+  /* QR */
+  #qr-container { display: flex; flex-direction: column; align-items: center; padding: 18px;
+    background: #FAFBFC; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); height: fit-content; }
+  #qr-container .qr-title { font-size: 13px; font-weight: 700; color: #004D3A; margin-bottom: 12px; text-align: center; }
+  #qrcode { padding: 8px; background: #fff; border: 1px solid #E4E8EB; border-radius: 8px; }
+  #qr-container .qr-hint { font-size: 11px; color: #888; margin-top: 10px; text-align: center; max-width: 180px; }
+  #qr-mobile { display: none; }
+
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    padding: 18px 20px; margin-top: 16px; }
+  .card h3 { margin: 0 0 12px; font-size: 16px; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+  .card.plan { border-left: 4px solid #8E44AD; }
+
+  .wgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .wcell { background: #F7FAFD; border-radius: 8px; padding: 14px; text-align: center; }
+  .wcell .wd { font-size: 12px; color: #666; font-weight: 600; }
+  .wcell .wt { font-size: 26px; font-weight: 800; color: #3498DB; margin: 6px 0; }
+  .wcell .ws { font-size: 12px; color: #555; }
+
+  .fx-line { font-size: 20px; font-weight: 700; color: #27AE60; }
+  .card small { color: #999; font-size: 12px; }
+
+  .notes ul, .plan ul { margin: 0; padding-left: 20px; }
+  .notes li { margin-bottom: 10px; font-size: 14px; line-height: 1.5; }
+  .plan li { margin-bottom: 8px; font-size: 14px; line-height: 1.5; }
+  .plan b { color: #8E44AD; }
+
+  footer { background: #EDEFF2; padding: 16px 24px; margin-top: 20px; display: flex;
+    justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 12px; color: #777; }
+  footer .r { color: #00604C; font-weight: 700; }
+
+  @media (min-width: 768px) {
+    .main-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: start; }
+  }
+  @media (max-width: 767px) {
+    .brand-header .wordmark { font-size: 16px; }
+    .brand-header .sub { font-size: 11px; }
+    #qr-container { display: none; }
+    #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 16px;
+      margin: 16px; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    #qr-mobile .qr-title { font-size: 12px; font-weight: 700; color: #004D3A; margin-bottom: 10px; }
+    #qrcode-mini { padding: 6px; background: #fff; border: 1px solid #E4E8EB; border-radius: 8px; }
+    .wgrid { grid-template-columns: 1fr; }
+    .btn-tongcheng { width: 100%; }
+    footer { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">Shanghai weekend trip next week — best flights without taking leave from office</span>
+  </header>
+
+  <div class="section-pad">
+    <div class="main-grid">
+      <!-- LEFT: flights -->
+      <div>
+        <div class="leg-label">✈ OUTBOUND · Fri 31 Jul 2026 (after work)</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended</span>
+          <div class="fno">CX302 <small>Cathay Pacific · Boeing 777-300</small></div>
+          <div class="route">HKG <b>21:05</b> <span class="arrow">✈</span> PVG <b>23:55</b></div>
+          <div class="price">HKD 730 <span class="orig">(≈ US$93)</span></div>
+          <div class="meta">⏱ ~2h 50m · Direct · Depart 9:05pm — leave straight after work, zero leave needed</div>
+          <a href="https://www.trip.com/flights/hong-kong-to-shanghai/tickets-hkg-sha/?flighttype=ow&dcity=hkg&acity=sha&ddate=2026-07-31&class=y&quantity=1" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-label">Alternative</span>
+          <div class="fno">CX362 <small>Cathay Pacific</small></div>
+          <div class="route">HKG <b>19:20</b> <span class="arrow">✈</span> PVG <b>22:10</b></div>
+          <div class="price">HKD 839 <span class="orig">(≈ US$107)</span></div>
+          <div class="meta">⏱ ~2h 50m · Direct · Earlier 7:20pm departure if you can slip out a touch early</div>
+          <a href="https://www.trip.com/flights/hong-kong-to-shanghai/tickets-hkg-sha/?flighttype=ow&dcity=hkg&acity=sha&ddate=2026-07-31&class=y&quantity=1" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="leg-label">✈ INBOUND · Sun 2 Aug 2026 (back before Monday work)</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended</span>
+          <div class="fno">CX381 <small>Cathay Pacific</small></div>
+          <div class="route">PVG <b>19:05</b> <span class="arrow">✈</span> HKG <b>21:50</b></div>
+          <div class="price">HKD 1,177 <span class="orig">(≈ US$150)</span></div>
+          <div class="meta">⏱ ~2h 45m · Direct · Full Sunday in Shanghai, home by ~10pm — fresh for Monday</div>
+          <a href="https://www.trip.com/flights/shanghai-to-hong-kong/tickets-sha-hkg/?flighttype=ow&dcity=sha&acity=hkg&ddate=2026-08-02&class=y&quantity=1" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-label">Alternative</span>
+          <div class="fno">CX327 <small>Cathay Pacific</small></div>
+          <div class="route">SHA(Hongqiao) <b>22:30</b> <span class="arrow">✈</span> HKG <b>01:15</b> <small>+1</small></div>
+          <div class="price">HKD 1,177 <span class="orig">(≈ US$150)</span></div>
+          <div class="meta">⏱ ~2h 45m · Direct · Squeeze every last hour — red-eye landing ~1:15am Mon</div>
+          <a href="https://www.trip.com/flights/shanghai-to-hong-kong/tickets-sha-hkg/?flighttype=ow&dcity=sha&acity=hkg&ddate=2026-08-02&class=y&quantity=1" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+      </div>
+
+      <!-- RIGHT: QR -->
+      <div id="qr-container">
+        <div class="qr-title">📱 Scan with WeChat<br>to view on mobile</div>
+        <div id="qrcode"></div>
+        <div class="qr-hint">Open this itinerary on your phone — flights, weather &amp; booking links.</div>
+      </div>
+    </div>
+
+    <!-- Mobile QR -->
+    <div id="qr-mobile">
+      <div class="qr-title">Scan to view on mobile</div>
+      <div id="qrcode-mini"></div>
+    </div>
+
+    <!-- Weather -->
+    <div class="card weather">
+      <h3>🌤 Shanghai Weather — your trip window</h3>
+      <div class="wgrid">
+        <div class="wcell"><div class="wd">Fri 31 Jul (arrival night)</div><div class="wt">30°C</div><div class="ws">Showers easing · humid · E wind 3–4</div></div>
+        <div class="wcell"><div class="wd">Sat 1 Aug</div><div class="wt">29–33°C</div><div class="ws">Cloudy, brief showers possible · pack an umbrella</div></div>
+        <div class="wcell"><div class="wd">Sun 2 Aug (departure day)</div><div class="wt">25–33°C</div><div class="ws">Mostly sunny · rain ~28% · great sightseeing day</div></div>
+      </div>
+      <p><small>Hot &amp; humid midsummer — light breathable clothes, sunscreen, a compact umbrella, and stay hydrated. Source: weather.com.cn / weather2weeks, updated 27 Jul 2026.</small></p>
+    </div>
+
+    <!-- FX -->
+    <div class="card fx">
+      <h3>💱 Live Exchange Rate</h3>
+      <p class="fx-line">1 USD ≈ 7.84 HKD &nbsp;·&nbsp; 100 CNY ≈ 109 HKD</p>
+      <p><small>Fares shown in HKD (converted from the airline's USD fare). Rate date: 27 Jul 2026. Source: fxrate.org. In Shanghai, Alipay/WeChat Pay accept foreign cards — carry a little cash for small vendors.</small></p>
+    </div>
+
+    <!-- Travel notes -->
+    <div class="card notes">
+      <h3>📌 Travel Notes (HK → Mainland China)</h3>
+      <ul>
+        <li>🪪 <b>Permit, not passport:</b> As a HK resident you need a valid <b>Home Return Permit (回乡证)</b> to enter mainland China — check it isn't expired. Visitors on other passports must confirm visa / visa-free eligibility before booking.</li>
+        <li>🔋 <b>Batteries &amp; power:</b> Power banks go in <b>carry-on only</b> (≤100Wh fine, no checked). Mainland sockets are <b>Type A/I, 220V</b> — same plugs work from HK, but bring an adapter for any UK-style 3-pin gear.</li>
+        <li>🚄 <b>Airport → city:</b> From <b>PVG (Pudong)</b> take the Maglev (~8 min to Longyang Rd) + Metro Line 2, or a ~50‑min Didi to downtown. Landing near midnight on CX302? Pre-book a Didi. From <b>SHA (Hongqiao)</b> Metro Line 2/10 puts you downtown in ~30 min.</li>
+      </ul>
+    </div>
+
+    <!-- Weekend plan -->
+    <div class="card plan">
+      <h3>🗺 Suggested No-Leave Weekend Plan</h3>
+      <ul>
+        <li><b>Fri night:</b> Land PVG 23:55 (CX302) → check in near People's Square / the Bund for easy access.</li>
+        <li><b>Sat:</b> The Bund waterfront → Yu Garden &amp; Old City → Nanjing Rd → evening Huangpu River cruise for the skyline.</li>
+        <li><b>Sun:</b> Former French Concession (Wukang Rd, cafés) &amp; Tianzifang in the morning → Jing'an Temple / brunch → head to PVG by ~16:30 for CX381 at 19:05. Home in HK ~21:50, ready for Monday.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <span>Generated 27 Jul 2026 16:34 · Steps: 6 · Data: 同程 / Cathay live schedules · Round-trip HKG⇄Shanghai</span>
+    <span class="r">Powered by WorkBuddy × Cathay Pacific</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
