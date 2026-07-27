@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HKG ⇄ Tokyo Round-Trip Itinerary — Cathay Pacific × WorkBuddy</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #F0F2F5;
+  color: #1A1A2E;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.6;
+}
+
+/* Header */
+.brand-header {
+  background: #004D3A;
+  padding: 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.brand-header .wordmark {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.brand-header .wordmark .x {
+  color: #00B894;
+  font-weight: 400;
+}
+.brand-header .sub {
+  color: rgba(255,255,255,0.7);
+  font-size: 12px;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+/* Trip summary bar */
+.trip-summary {
+  background: linear-gradient(135deg, #00604C 0%, #00876A 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+.trip-summary .badge {
+  background: rgba(255,255,255,0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Main grid */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 240px;
+  gap: 24px;
+}
+
+/* Leg label */
+.leg-label {
+  font-size: 16px;
+  font-weight: 700;
+  color: #004D3A;
+  margin: 20px 0 10px;
+  padding-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.leg-label:first-child { margin-top: 0; }
+.leg-label .icon { font-size: 20px; }
+
+/* Flight cards */
+.flight-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.flight-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+.flight-card.recommended {
+  border-left: 4px solid #00604C;
+}
+.flight-card.alternate {
+  border-left: 2px solid #CCC;
+  opacity: 0.92;
+}
+
+.flight-card .badge-rec {
+  display: inline-block;
+  background: #00604C;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.flight-card .badge-alt {
+  display: inline-block;
+  color: #999;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.flight-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1A1A2E;
+  margin-bottom: 6px;
+}
+.flight-card .route {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.flight-card .route .arrow {
+  color: #00604C;
+  margin: 0 6px;
+}
+.flight-card .price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #00604C;
+  margin-bottom: 4px;
+}
+.flight-card .meta {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 8px;
+}
+.flight-card .meta span {
+  margin-right: 12px;
+}
+.flight-card .note {
+  font-size: 11px;
+  color: #aaa;
+}
+
+/* Booking button */
+.btn-tongcheng {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 24px;
+  background: #E4393C;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 6px;
+  text-decoration: none;
+  text-align: center;
+  transition: background 0.2s;
+}
+.btn-tongcheng:hover { background: #c92c2e; }
+
+/* QR container */
+#qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px;
+  background: #FAFBFC;
+  border-radius: 12px;
+  border: 1px solid #e8e8e8;
+  position: sticky;
+  top: 20px;
+}
+#qr-container #qrcode {
+  margin: 8px 0;
+  padding: 8px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+#qr-container .qr-label {
+  font-size: 12px;
+  color: #888;
+  text-align: center;
+  margin-top: 8px;
+  line-height: 1.4;
+}
+#qr-mobile { display: none; }
+
+/* Info cards */
+.info-section {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+.card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #1A1A2E;
+}
+.card.weather { border-left: 4px solid #3498DB; }
+.card.fx { border-left: 4px solid #27AE60; }
+.card.notes { border-left: 4px solid #F39C12; }
+
+.weather-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+.weather-day {
+  padding: 10px 6px;
+  background: #F8FAFB;
+  border-radius: 8px;
+}
+.weather-day .date { font-size: 11px; color: #888; margin-bottom: 4px; }
+.weather-day .temp { font-size: 20px; font-weight: 700; color: #3498DB; }
+.weather-day .desc { font-size: 11px; color: #666; margin-top: 2px; }
+.weather-day .wind { font-size: 10px; color: #aaa; }
+
+.fx p { font-size: 20px; font-weight: 700; color: #27AE60; }
+.fx small { font-size: 11px; color: #999; display: block; margin-top: 4px; }
+
+.notes ul { list-style: none; padding: 0; }
+.notes ul li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: #444;
+  border-bottom: 1px solid #f0f0f0;
+}
+.notes ul li:last-child { border-bottom: none; }
+.notes ul li .emoji { margin-right: 6px; }
+
+/* Full-width notes */
+.notes-full {
+  grid-column: 1 / -1;
+  margin-top: 16px;
+}
+
+/* Footer */
+footer {
+  margin-top: 32px;
+  padding: 16px 20px;
+  background: #F0F2F5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #999;
+  border-top: 1px solid #e0e0e0;
+}
+footer .right { color: #00604C; font-weight: 600; }
+
+/* Price summary */
+.price-summary {
+  margin-top: 24px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.price-summary .total-label { font-size: 14px; color: #888; }
+.price-summary .total-price { font-size: 26px; font-weight: 700; color: #00604C; }
+
+/* Mobile */
+@media (max-width: 767px) {
+  .brand-header { padding: 14px 16px; }
+  .brand-header .wordmark { font-size: 16px; }
+  .brand-header .sub { font-size: 11px; }
+
+  .container { padding: 12px; }
+
+  .main-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  #qr-container { display: none; }
+  #qr-mobile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    margin-top: 16px;
+    background: #FAFBFC;
+    border-radius: 12px;
+    border: 1px solid #e8e8e8;
+  }
+  #qr-mobile .qr-label { font-size: 11px; color: #888; margin-top: 4px; }
+
+  .info-section {
+    grid-template-columns: 1fr;
+  }
+  .weather-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .btn-tongcheng { width: 100%; text-align: center; }
+
+  .trip-summary { font-size: 12px; flex-direction: column; align-items: flex-start; }
+
+  .flight-card h2 { font-size: 22px; }
+  .flight-card .price { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<header class="brand-header">
+  <span class="wordmark">Cathay Pacific <span class="x">&times;</span> WorkBuddy</span>
+  <span class="sub">End of month, four days in Tokyo for an exhibition. No red-eyes.</span>
+</header>
+
+<div class="container">
+
+  <!-- Trip Summary -->
+  <div class="trip-summary">
+    <div><strong>HKG</strong> &rarr; <strong>Tokyo</strong> &rarr; <strong>HKG</strong></div>
+    <div><span class="badge">Jul 28</span> &rarr; <span class="badge">Jul 31</span></div>
+    <div><span class="badge">4 Days</span></div>
+    <div><span class="badge">No Red-Eyes</span></div>
+  </div>
+
+  <div class="main-grid">
+
+    <!-- Flight cards column -->
+    <div class="flights-col">
+
+      <!-- OUTBOUND -->
+      <div class="leg-label"><span class="icon">&#9992;</span> OUTBOUND &mdash; HKG &rarr; Tokyo &middot; Tuesday, July 28, 2026</div>
+
+      <div class="flight-card recommended">
+        <span class="badge-rec">&#9733; Recommended</span>
+        <h2>CX526</h2>
+        <div class="route">HKG 08:15 <span class="arrow">&rarr;</span> NRT 13:05</div>
+        <div class="price">HKD 4,800</div>
+        <div class="meta">
+          <span>&#9201; ~4h 50m</span>
+          <span>&#9992; Direct</span>
+          <span>A350</span>
+        </div>
+        <div class="note">Cathay Pacific &middot; Morning departure, arrive early afternoon &mdash; perfect for exhibition setup</div>
+        <a href="https://flight.ly.com/search?dep=HKG&arr=NRT&date=2026-07-28" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">&#9992; Book on &#21516;&#31243;</a>
+      </div>
+
+      <div class="flight-card alternate">
+        <span class="badge-alt">Alt</span>
+        <h2>CX504</h2>
+        <div class="route">HKG 09:05 <span class="arrow">&rarr;</span> NRT 13:55</div>
+        <div class="price">HKD 5,200</div>
+        <div class="meta">
+          <span>&#9201; ~4h 50m</span>
+          <span>&#9992; Direct</span>
+          <span>B777</span>
+        </div>
+        <a href="https://flight.ly.com/search?dep=HKG&arr=NRT&date=2026-07-28" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">&#9992; Book on &#21516;&#31243;</a>
+      </div>
+
+      <!-- INBOUND -->
+      <div class="leg-label"><span class="icon">&#9992;</span> INBOUND &mdash; Tokyo &rarr; HKG &middot; Friday, July 31, 2026</div>
+
+      <div class="flight-card recommended">
+        <span class="badge-rec">&#9733; Recommended</span>
+        <h2>CX521</h2>
+        <div class="route">NRT 17:15 <span class="arrow">&rarr;</span> HKG 21:10</div>
+        <div class="price">HKD 4,200</div>
+        <div class="meta">
+          <span>&#9201; ~4h 55m</span>
+          <span>&#9992; Direct</span>
+          <span>B777</span>
+        </div>
+        <div class="note">Cathay Pacific &middot; Full last day at the exhibition, head to Narita after lunch</div>
+        <a href="https://flight.ly.com/search?dep=NRT&arr=HKG&date=2026-07-31" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">&#9992; Book on &#21516;&#31243;</a>
+      </div>
+
+      <div class="flight-card alternate">
+        <span class="badge-alt">Alt</span>
+        <h2>CX549</h2>
+        <div class="route">HND 16:25 <span class="arrow">&rarr;</span> HKG 20:30</div>
+        <div class="price">HKD 4,500</div>
+        <div class="meta">
+          <span>&#9201; ~5h 05m</span>
+          <span>&#9992; Direct</span>
+          <span>A350</span>
+        </div>
+        <a href="https://flight.ly.com/search?dep=HND&arr=HKG&date=2026-07-31" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">&#9992; Book on &#21516;&#31243;</a>
+      </div>
+
+      <!-- Price Summary -->
+      <div class="price-summary">
+        <span class="total-label">Recommended Round-Trip Total</span>
+        <span class="total-price">HKD 9,000</span>
+      </div>
+    </div>
+
+    <!-- QR Code (desktop) -->
+    <div id="qr-container">
+      <div id="qrcode"></div>
+      <div class="qr-label">&#128241; Scan with WeChat<br>to view on mobile</div>
+    </div>
+
+  </div>
+
+  <!-- Weather + FX -->
+  <div class="info-section">
+    <div class="card weather">
+      <h3>&#127781; Tokyo Weather (Jul 28&ndash;31)</h3>
+      <div class="weather-grid">
+        <div class="weather-day">
+          <div class="date">Tue 28</div>
+          <div class="temp">25&ndash;34&deg;C</div>
+          <div class="desc">Mostly Cloudy</div>
+          <div class="wind">&#128168; 19 km/h</div>
+        </div>
+        <div class="weather-day">
+          <div class="date">Wed 29</div>
+          <div class="temp">25&ndash;33&deg;C</div>
+          <div class="desc">Cloudy</div>
+          <div class="wind">&#128168; 20 km/h</div>
+        </div>
+        <div class="weather-day">
+          <div class="date">Thu 30</div>
+          <div class="temp">25&ndash;34&deg;C</div>
+          <div class="desc">Mostly Cloudy</div>
+          <div class="wind">&#128168; 18 km/h</div>
+        </div>
+        <div class="weather-day">
+          <div class="date">Fri 31</div>
+          <div class="temp">25&ndash;32&deg;C</div>
+          <div class="desc">Scattered Clouds</div>
+          <div class="wind">&#128168; 22 km/h</div>
+        </div>
+      </div>
+      <small style="color:#999;margin-top:8px;display:block;">Source: WMO / Japan Meteorological Agency</small>
+    </div>
+
+    <div class="card fx">
+      <h3>&#128176; Live Exchange Rate</h3>
+      <p>1 HKD &asymp; 20.86 JPY</p>
+      <small>Rate date: July 27, 2026 &middot; Source: XE.com</small>
+    </div>
+  </div>
+
+  <!-- Travel Notes -->
+  <div class="card notes notes-full" style="margin-top:16px;">
+    <h3>&#128218; Airline Travel Notes</h3>
+    <ul>
+      <li><span class="emoji">&#127888;</span> <strong>Visa:</strong> Hong Kong SAR passport holders enjoy <strong>90-day visa-free</strong> entry to Japan. Just need a valid passport with 6+ months remaining.</li>
+      <li><span class="emoji">&#128267;</span> <strong>Carry-on Batteries:</strong> Lithium batteries &amp; power banks must be in <strong>carry-on only</strong> (not checked). Max 100Wh without airline approval. Spare batteries must have terminals protected.</li>
+      <li><span class="emoji">&#128646;</span> <strong>Airport to Tokyo:</strong> NRT &rarr; Tokyo Station via <strong>Narita Express (N'EX)</strong> ~53 min, &yen;3,070. HND &rarr; city via <strong>Tokyo Monorail</strong> ~15 min to Hamamatsucho, &yen;500. Suica/PASMO cards work on both.</li>
+    </ul>
+  </div>
+
+  <!-- Mobile QR -->
+  <div id="qr-mobile">
+    <div id="qrcode-mini"></div>
+    <div class="qr-label">&#128241; Scan with WeChat to view on mobile</div>
+  </div>
+
+  <footer>
+    <span>Generated at: 2026-07-27 12:59 HKT &middot; Steps: 6 &middot; Data: Live web search</span>
+    <span class="right">Powered by WorkBuddy &times; Cathay Pacific</span>
+  </footer>
+
+</div>
+
+<!-- QR Code JS -->
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+
+</body>
+</html>
