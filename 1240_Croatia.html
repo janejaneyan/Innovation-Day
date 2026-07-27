@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HKG ⇄ Zagreb Itinerary · Cathay Pacific × WorkBuddy</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #F0F2F5; color: #1A1A2E; }
+  .wrap { max-width: 1200px; margin: 0 auto; background: #F0F2F5; }
+  .brand-header { background: #004D3A; padding: 22px 24px; display: flex; flex-direction: column; gap: 5px; }
+  .brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: .3px; }
+  .brand-header .wordmark .x { color: #00B894; }
+  .brand-header .sub { color: rgba(255,255,255,0.72); font-size: 12px; max-width: 92%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .trip-bar { background: #00604C; color: #fff; padding: 10px 24px; font-size: 13px; display: flex; flex-wrap: wrap; gap: 16px; }
+  .trip-bar b { color: #FFD666; }
+  .content { padding: 20px 24px; }
+  .main-grid { display: block; }
+  .leg-label { font-size: 16px; font-weight: 700; color: #004D3A; margin: 18px 0 10px; padding-left: 4px; border-left: 3px solid #00604C; padding-left: 10px; }
+  .flight-card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); padding: 16px 18px; margin-bottom: 14px; transition: 0.2s; }
+  .flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .flight-card.recommended { border-left: 4px solid #00604C; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .badge { display: inline-block; background: #00604C; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 4px; margin-bottom: 8px; }
+  .badge.alt { background: #888; }
+  .flight-card h2 { font-size: 24px; font-weight: 700; margin: 4px 0 6px; color: #1A1A2E; }
+  .route { font-size: 15px; color: #333; margin-bottom: 6px; }
+  .price { font-size: 21px; font-weight: 700; color: #00604C; }
+  .price .orig { font-size: 12px; color: #999; font-weight: 400; margin-left: 6px; }
+  .meta { font-size: 13px; color: #888; margin-top: 4px; }
+  .btn-tongcheng { display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C; color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none; text-align: center; transition: background 0.2s; }
+  .btn-tongcheng:hover { background: #c92c2e; }
+  .card { background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); padding: 16px 18px; margin-bottom: 14px; }
+  .card h3 { margin: 0 0 12px; font-size: 16px; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+  .card.alert { border-left: 4px solid #E67E22; background: #FFF8F0; }
+  .card.alert h3 { color: #C0562B; }
+  .card.alert p { font-size: 13.5px; line-height: 1.6; margin: 6px 0; color: #5a4530; }
+  .wgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .wday { text-align: center; padding: 10px; background: #F7FAFD; border-radius: 8px; }
+  .wday .d { font-size: 12px; color: #888; }
+  .wday .t { font-size: 22px; font-weight: 700; color: #3498DB; margin: 4px 0; }
+  .wday .s { font-size: 12px; color: #666; }
+  .card.fx p { font-size: 18px; font-weight: 700; color: #27AE60; margin: 4px 0; }
+  .card.fx small { color: #999; font-size: 11px; }
+  .card.notes ul { margin: 0; padding-left: 18px; }
+  .card.notes li { font-size: 13.5px; line-height: 1.7; color: #444; margin-bottom: 4px; }
+  #qr-container { display: none; }
+  #qr-mobile { display: none; }
+  footer { background: #F0F2F5; padding: 16px 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 11px; color: #888; border-top: 1px solid #e2e5ea; }
+  footer .r { color: #00604C; font-weight: 600; }
+
+  @media (min-width: 768px) {
+    .main-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: start; }
+    #qr-container { display: flex; flex-direction: column; align-items: center; padding: 18px; background: #FAFBFC; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); position: sticky; top: 16px; }
+    #qr-container .lbl { font-size: 12px; color: #555; text-align: center; margin-top: 12px; line-height: 1.4; }
+    #qrcode { padding: 8px; background: #fff; border: 1px solid #eee; border-radius: 8px; }
+  }
+  @media (max-width: 767px) {
+    #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 16px; margin-top: 8px; background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin: 8px 24px 0; }
+    #qr-mobile .lbl { font-size: 12px; color: #555; margin-top: 8px; }
+    .brand-header .wordmark { font-size: 16px; }
+    .brand-header .sub { font-size: 11px; }
+    .btn-tongcheng { width: 100%; }
+    .wgrid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .wday .t { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">I want go to Croatia for a week, midnight flight departing, back to work the week after Monday</span>
+  </header>
+  <div class="trip-bar">
+    <span>🗺️ <b>HKG ⇄ ZAG</b> (Zagreb, Croatia)</span>
+    <span>📅 Out <b>Sat 2026-08-01</b> · Back <b>Sun 2026-08-09</b></span>
+    <span>🕛 Midnight departure preferred · ~1 week on ground</span>
+  </div>
+
+  <div class="content">
+    <div class="card alert">
+      <h3>⚠️ Honest routing note</h3>
+      <p><b>Cathay Pacific does not fly Hong Kong–Croatia non-stop.</b> There is no direct HKG–Zagreb service by any airline — every option is 1-stop (via Istanbul, Dubai, Frankfurt, Munich or London). The "CX" options below are Cathay-marketed <b>codeshares</b> (CX + Lufthansa / British Airways), so they still earn Asia Miles but are operated partly by partners.</p>
+      <p><b>On the "midnight departure":</b> only two flights actually leave near midnight — CX289 (23:55, Cathay-marketed) and LH797 (23:25, Lufthansa, far cheaper). Both are shown as the recommended picks.</p>
+      <p><b>On "back to work Monday":</b> given the 17–20h routing + timezone, a Sunday (Aug 9) departure lands in Hong Kong on <b>Monday</b> afternoon at the earliest — so you'd realistically be back at your desk Tuesday, or fly out Saturday Aug 8 instead. Flagging so there's no surprise.</p>
+    </div>
+
+    <div class="main-grid">
+      <div class="legs">
+        <div class="leg-label">✈ OUTBOUND · Sat 2026-08-01 (midnight)</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended · CX midnight</span>
+          <h2>CX289 + LH1404</h2>
+          <div class="route">HKG <b>23:55</b> ✈ ZAG 14:15 (+1) · via Frankfurt</div>
+          <div class="price">HKD 17,760 <span class="orig">(¥15,336)</span></div>
+          <div class="meta">⏱ 20h20m · 1 stop · Cathay-marketed codeshare (LH operated)</div>
+          <a href="https://s.ly.com/fiAHic6PZ" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="badge alt">Alt · cheapest midnight</span>
+          <h2>LH797 + LH6000</h2>
+          <div class="route">HKG <b>23:25</b> ✈ ZAG 11:25 (+1) · via Frankfurt</div>
+          <div class="price">HKD 9,997 <span class="orig">(¥8,632)</span></div>
+          <div class="meta">⏱ 18h00m · 1 stop · Lufthansa · ~44% cheaper than the CX codeshare</div>
+          <a href="https://s.ly.com/liAHic6VZ" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="leg-label">✈ INBOUND · Sun 2026-08-09</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended · cheapest return</span>
+          <h2>EK2013 + EK382</h2>
+          <div class="route">ZAG <b>14:30</b> ✈ HKG 15:25 (+1, Mon) · via Dubai</div>
+          <div class="price">HKD 6,640 <span class="orig">(¥5,734)</span></div>
+          <div class="meta">⏱ 18h55m · 1 stop · Emirates · lands Mon 15:25 (back to desk Tue)</div>
+          <a href="https://s.ly.com/FiAEic6fW" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="badge alt">Alt · shortest transit</span>
+          <h2>TK1056 + TK070</h2>
+          <div class="route">ZAG <b>20:25</b> ✈ HKG 17:15 (+1, Mon) · via Istanbul</div>
+          <div class="price">HKD 7,131 <span class="orig">(¥6,154)</span></div>
+          <div class="meta">⏱ 14h50m · 1 stop · Turkish Airlines · fastest total routing</div>
+          <a href="https://s.ly.com/HiAEic6hW" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+      </div>
+
+      <div id="qr-container">
+        <div id="qrcode"></div>
+        <div class="lbl">📱 Scan with WeChat<br>to view on mobile</div>
+      </div>
+    </div>
+
+    <div class="card weather">
+      <h3>🌤️ Zagreb Weather (arrival window)</h3>
+      <div class="wgrid">
+        <div class="wday"><div class="d">Sat Aug 1</div><div class="t">32°/16°</div><div class="s">Patchy rain · UV 7</div></div>
+        <div class="wday"><div class="d">Sun Aug 2</div><div class="t">30°/15°</div><div class="s">Overcast · UV 6</div></div>
+        <div class="wday"><div class="d">Mon Aug 3</div><div class="t">27°/16°</div><div class="s">Patchy rain · UV 6</div></div>
+      </div>
+      <div style="font-size:12px;color:#888;margin-top:10px;">Warm continental summer — highs ~28–34°C, cool nights ~15–17°C. Pack for hot days + occasional afternoon showers. Return week (Aug 8–9) trends hot & sunny.</div>
+    </div>
+
+    <div class="card fx">
+      <h3>💱 Live Exchange Rate</h3>
+      <p>1 CNY ≈ 1.1581 HKD</p>
+      <p style="font-size:13px;color:#555;">Croatia uses the Euro (EUR): 1 EUR ≈ 9.1 HKD (approx.)</p>
+      <small>Rate date: 2026-07-24 · Source: frankfurter.dev · Fares quoted by 同程 in CNY, converted to HKD</small>
+    </div>
+
+    <div class="card notes">
+      <h3>📋 Travel Notes</h3>
+      <ul>
+        <li>✈ <b>Visa:</b> Croatia is in the Schengen Area (since 2023). HKSAR passport holders get <b>visa-free stay up to 90 days</b> — no visa needed for a 1-week trip.</li>
+        <li>🔌 <b>Power & battery:</b> Croatia uses <b>Type C / F sockets, 230V</b> — bring an EU adapter. Power banks must go in <b>carry-on only</b> (≤100Wh, no checked); each transit hub (FRA/DXB/IST) enforces this.</li>
+        <li>🚆 <b>Airport → city:</b> Zagreb Airport (ZAG) to downtown is ~17 km — the <b>Croatia Airlines shuttle bus</b> (~30 min, €8) or taxi (~€25, 20 min). Croatia is a compact base for day trips to Plitvice Lakes & the coast.</li>
+      </ul>
+    </div>
+
+    <div id="qr-mobile">
+      <div id="qrcode-mini"></div>
+      <div class="lbl">Scan to view on mobile</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Generated 2026-07-27 12:40 · Steps: 6 · Data source: 同程 MCP (live) + frankfurter FX</span>
+    <span class="r">Powered by WorkBuddy × Cathay Pacific</span>
+  </footer>
+</div>
+
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      var el = document.getElementById('qrcode');
+      if (el) el.innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
