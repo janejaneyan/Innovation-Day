@@ -1,0 +1,243 @@
+<!-- Cathay Pacific × WorkBuddy round-trip itinerary: Hong Kong ⇄ Abu Dhabi -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HKG ⇄ AUH Itinerary · Grand Mosque Trip</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; background: #F0F2F5;
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color: #1A1A2E; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding-bottom: 40px; }
+
+  /* Header wordmark */
+  .brand-header { background: #004D3A; padding: 24px 28px; display: flex; flex-direction: column; gap: 6px;
+    background: linear-gradient(135deg, #004D3A 0%, #00604C 100%); }
+  .brand-header .wordmark { color: #fff; font-size: 24px; font-weight: 700; letter-spacing: .3px; }
+  .brand-header .wordmark .x { color: #C9A24B; padding: 0 4px; }
+  .brand-header .sub { color: rgba(255,255,255,0.82); font-size: 13px; max-width: 92%;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .content { padding: 24px 28px; }
+  .main-grid { }
+  .leg-label { font-size: 17px; font-weight: 700; color: #004D3A; margin: 20px 0 10px; padding-left: 4px;
+    display: flex; align-items: center; gap: 8px; }
+  .leg-label:first-child { margin-top: 0; }
+
+  .flight-card { background: #fff; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: .2s; }
+  .flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .flight-card.recommended { border-left: 4px solid #00604C; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .badge { display: inline-block; background: #00604C; color: #fff; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; letter-spacing: .4px; }
+  .alt-label { display: inline-block; color: #999; font-size: 11px; font-weight: 700; margin-bottom: 6px;
+    text-transform: uppercase; letter-spacing: .5px; }
+  .flight-no { font-size: 26px; font-weight: 700; color: #1A1A2E; margin: 2px 0; }
+  .route { font-size: 15px; color: #333; margin: 6px 0; }
+  .route .airport { font-weight: 600; }
+  .route .arrow { color: #00604C; padding: 0 6px; }
+  .price { font-size: 22px; font-weight: 700; color: #00604C; margin: 8px 0 2px; }
+  .orig-price { font-size: 12px; color: #999; }
+  .meta { font-size: 13px; color: #888; margin-top: 4px; }
+  .btn-tongcheng { display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C;
+    color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none;
+    text-align: center; transition: background .2s; }
+  .btn-tongcheng:hover { background: #c92c2e; }
+
+  /* Cards */
+  .card { background: #fff; border-radius: 12px; padding: 18px 20px; margin-top: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .card h3 { margin: 0 0 12px; font-size: 16px; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+  .card.mosque { border-left: 4px solid #00604C; }
+
+  .wgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .wcell { background: #F7FBFF; border-radius: 10px; padding: 14px; text-align: center; }
+  .wcell .wdate { font-size: 13px; color: #555; font-weight: 600; }
+  .wcell .wtemp { font-size: 26px; font-weight: 700; color: #3498DB; margin: 6px 0; }
+  .wcell .wdesc { font-size: 12px; color: #777; }
+
+  .fx p { font-size: 20px; font-weight: 700; color: #27AE60; margin: 4px 0; }
+  .fx small { color: #999; font-size: 12px; }
+
+  .notes ul, .mosque ul { margin: 0; padding-left: 20px; }
+  .notes li, .mosque li { margin: 8px 0; font-size: 14px; line-height: 1.55; }
+  .mosque .addr { background:#F3FAF7; border-radius:8px; padding:10px 14px; font-size:13px; color:#333; margin:4px 0 12px; }
+  .mosque .btn-maps { display:inline-block; margin:8px 8px 0 0; padding:9px 18px; background:#00604C; color:#fff;
+    font-size:13px; font-weight:600; border-radius:6px; text-decoration:none; }
+  .mosque .btn-maps:hover { background:#00473a; }
+
+  /* QR */
+  #qr-container { display: flex; flex-direction: column; align-items: center; padding: 18px;
+    background: #FAFBFC; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  #qr-container .qrlabel { font-size: 13px; color: #555; margin-top: 12px; text-align: center; font-weight: 600; }
+  #qrcode { width: 200px; height: 200px; }
+  #qr-mobile { display: none; }
+
+  footer { background: #EAECEF; padding: 16px 28px; display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px; font-size: 12px; color: #666; margin-top: 24px; }
+  footer .pw { color: #00604C; font-weight: 600; }
+
+  /* Desktop */
+  @media (min-width: 768px) {
+    .layout { display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: start; }
+  }
+  /* Mobile */
+  @media (max-width: 767px) {
+    .brand-header .wordmark { font-size: 18px; }
+    .brand-header .sub { font-size: 11px; }
+    .layout { display: flex; flex-direction: column; }
+    #qr-container { display: none; }
+    #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 16px;
+      margin-top: 16px; background: #FAFBFC; border-radius: 12px; }
+    #qr-mobile .qrlabel { font-size: 12px; color: #555; margin-top: 8px; }
+    .wgrid { grid-template-columns: 1fr; }
+    .btn-tongcheng { width: 100%; }
+    .flight-no { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">Visit the Grand Mosque in Abu Dhabi — how to get there from Hong Kong & driving access</span>
+  </header>
+
+  <div class="content">
+    <div class="layout">
+      <div class="main-grid">
+
+        <!-- OUTBOUND -->
+        <div class="leg-label">✈ OUTBOUND · Hong Kong → Abu Dhabi · Sat 8 Aug 2026</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ RECOMMENDED · NONSTOP</span>
+          <div class="flight-no">EY871 · Etihad Airways</div>
+          <div class="route"><span class="airport">HKG 20:20</span><span class="arrow">✈</span><span class="airport">AUH 00:35 (+1)</span></div>
+          <div class="price">HKD 4,610</div>
+          <div class="orig-price">Original fare ≈ CNY 4,229 · Economy</div>
+          <div class="meta">⏱ ~8h 15m · Nonstop · Boeing 787 · HKG T1 → Zayed Intl (AUH)</div>
+          <a href="https://www.ly.com/iflight/book1.html?para=HKG*AUH*2026-08-08*1900-01-01*OW*1_0_0*Y|S|C|F&departureCity=香港&arrivalCity=阿布扎比" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-label">Alternative · Cathay codeshare (1 stop)</span>
+          <div class="flight-no">CX755 + EY405</div>
+          <div class="route"><span class="airport">HKG 09:25</span><span class="arrow">✈</span><span class="airport">AUH 19:10</span> · via Bangkok (BKK)</div>
+          <div class="price">HKD 13,530</div>
+          <div class="orig-price">Original fare ≈ CNY 12,417 · Economy · CX-operated first leg</div>
+          <div class="meta">⏱ ~13h 45m · 1 stop (BKK 4h 25m) · Cathay Pacific + Etihad</div>
+          <a href="https://www.ly.com/iflight/book1.html?para=HKG*AUH*2026-08-08*1900-01-01*OW*1_0_0*Y|S|C|F&departureCity=香港&arrivalCity=阿布扎比" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <!-- INBOUND -->
+        <div class="leg-label">✈ INBOUND · Abu Dhabi → Hong Kong · Wed 12 Aug 2026</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ RECOMMENDED · NONSTOP</span>
+          <div class="flight-no">EY870 · Etihad Airways</div>
+          <div class="route"><span class="airport">AUH 21:10</span><span class="arrow">✈</span><span class="airport">HKG 09:00 (+1)</span></div>
+          <div class="price">HKD 5,480</div>
+          <div class="orig-price">Original fare ≈ CNY 5,024 · Economy</div>
+          <div class="meta">⏱ ~7h 50m · Nonstop · Boeing 787 · Zayed Intl (AUH) → HKG T1</div>
+          <a href="https://www.ly.com/iflight/book1.html?para=AUH*HKG*2026-08-12*1900-01-01*OW*1_0_0*Y|S|C|F&departureCity=阿布扎比&arrivalCity=香港" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-label">Alternative · Etihad + Cathay (1 stop)</span>
+          <div class="flight-no">EY216 + CX698</div>
+          <div class="route"><span class="airport">AUH 14:10</span><span class="arrow">✈</span><span class="airport">HKG 06:40 (+1)</span> · via Delhi (DEL)</div>
+          <div class="price">HKD 3,700</div>
+          <div class="orig-price">Original fare ≈ CNY 3,395 · Economy · CX-operated final leg</div>
+          <div class="meta">⏱ ~12h 30m · 1 stop (DEL) · Etihad + Cathay Pacific</div>
+          <a href="https://www.ly.com/iflight/book1.html?para=AUH*HKG*2026-08-12*1900-01-01*OW*1_0_0*Y|S|C|F&departureCity=阿布扎比&arrivalCity=香港" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div style="font-size:12px;color:#999;margin-top:10px;line-height:1.5;">
+          Note: There is no Cathay Pacific <b>nonstop</b> between Hong Kong and Abu Dhabi — CX flies HKG→Dubai (DXB) nonstop, but AUH is served nonstop by Etihad. To honour the CX preference, the alternatives above use Cathay-operated legs via a connection. Live fetch: 同程 flight API returned HTTP 401 (needs re-auth); prices sourced via 同程 (ly.com) / Ctrip reference on 2026-07-27 and converted to HKD — treat as a reference range, confirm live at booking.
+        </div>
+
+        <!-- WEATHER -->
+        <div class="card weather">
+          <h3>🌡 Abu Dhabi Weather (trip window outlook)</h3>
+          <div class="wgrid">
+            <div class="wcell"><div class="wdate">Sat 8 Aug</div><div class="wtemp">42° / 33°</div><div class="wdesc">Sunny · 0mm rain · UV extreme</div></div>
+            <div class="wcell"><div class="wdate">Sun 9 Aug</div><div class="wtemp">41° / 32°</div><div class="wdesc">Clear · humid · wind ~20 km/h</div></div>
+            <div class="wcell"><div class="wdate">Mon 10 Aug</div><div class="wtemp">40° / 32°</div><div class="wdesc">Scattered cloud · very hot</div></div>
+          </div>
+          <div style="font-size:12px;color:#999;margin-top:10px;">August is peak summer — extreme heat & humidity, near-zero rain. Outdoor time is toughest 11:00–16:00. Source: meteoblue / weather2travel outlook, 2026-07-27.</div>
+        </div>
+
+        <!-- FX -->
+        <div class="card fx">
+          <h3>💱 Live Exchange Rate</h3>
+          <p>1 HKD ≈ 0.468 AED &nbsp;·&nbsp; 1 AED ≈ 2.14 HKD</p>
+          <small>Rate date: 2026-07-27 · Source: exchangerate-api (fallback; 同程 FX unavailable)</small>
+        </div>
+
+        <!-- GRAND MOSQUE DRIVING GUIDE -->
+        <div class="card mosque">
+          <h3>🕌 Sheikh Zayed Grand Mosque — Driving There & Access</h3>
+          <div class="addr">📍 <b>Sheikh Zayed Grand Mosque Center</b>, Sheikh Rashid Bin Saeed Street, Abu Dhabi, UAE · ~30 min / ~30 km from Zayed International Airport (AUH)</div>
+          <ul>
+            <li><b>Driving from the airport / city:</b> Head onto <b>Sheikh Rashid Bin Saeed Street (E10)</b> — the mosque sits between the airport and downtown, so it's an easy, well-signed drive. Google/Apple Maps and local nav (Careem/Yango) all route directly to the visitor entrance.</li>
+            <li><b>Where to park (important):</b> Do NOT drive to the mosque plaza. Park at the <b>Sheikh Zayed Grand Mosque Visitor Centre car park</b> (free) located <b>beneath / beside the Wahat Al Karama</b> side. From there a short underground walkway / travelator leads you up into the mosque. Follow signs for "Visitor Entrance / Parking P1–P3".</li>
+            <li><b>Best arrival times by car:</b> Open Sat–Thu 09:00–22:00, Fri 16:30–22:00 (last entry ~21:30). Arrive <b>early morning (09:00–10:00)</b> or <b>after sunset</b> to beat both crowds and the 40°C+ heat. Parking fills fast on weekend evenings.</li>
+            <li><b>Entry is free but requires registration:</b> Book a <b>free timed entry slot online</b> in advance at the official visit portal (szgmc.gov.ae) — walk-ins may wait. Bring passport/Emirates ID.</li>
+            <li><b>Dress code (strictly enforced):</b> Shoulders & knees covered; women need a headscarf. Men: long trousers, no shorts. Free <b>abayas</b> are available at the entrance if needed. No tight/sheer clothing.</li>
+          </ul>
+          <a class="btn-maps" href="https://www.google.com/maps/dir/?api=1&destination=Sheikh+Zayed+Grand+Mosque+Abu+Dhabi" target="_blank" rel="noopener noreferrer">🚗 Driving directions (Maps)</a>
+          <a class="btn-maps" href="https://szgmc.gov.ae/" target="_blank" rel="noopener noreferrer" style="background:#C9A24B;">🎟 Book free entry slot</a>
+        </div>
+
+        <!-- TRAVEL NOTES -->
+        <div class="card notes">
+          <h3>📌 Travel Notes</h3>
+          <ul>
+            <li>✈ <b>Visa:</b> HKSAR passport holders get <b>visa-free / visa-on-arrival (30 days)</b> for the UAE — carry a passport valid 6+ months and a return ticket.</li>
+            <li>🔋 <b>Batteries & baggage:</b> Power banks in carry-on only (≤100Wh). Etihad Economy typically allows <b>2×23 kg</b> checked + 1 cabin bag — confirm your fare's allowance.</li>
+            <li>🔌 <b>Sockets & driving:</b> UAE uses <b>Type G (UK 3-pin), 230V</b> — bring a UK adapter. To drive, an <b>International Driving Permit</b> alongside your HK licence is accepted for rentals; roads are excellent and drive on the <b>right</b>.</li>
+          </ul>
+        </div>
+
+      </div><!-- /main-grid -->
+
+      <!-- QR (desktop) -->
+      <div id="qr-container">
+        <div id="qrcode"></div>
+        <div class="qrlabel">📱 Scan with WeChat<br>to view on mobile</div>
+      </div>
+    </div><!-- /layout -->
+
+    <!-- QR (mobile) -->
+    <div id="qr-mobile">
+      <div id="qrcode-mini"></div>
+      <div class="qrlabel">Scan to view on mobile</div>
+    </div>
+  </div><!-- /content -->
+
+  <footer>
+    <span>Generated 2026-07-27 13:18 · Steps: 6 · Data: 同程 (ly.com/Ctrip fallback), weather &amp; FX APIs</span>
+    <span class="pw">Powered by WorkBuddy × Cathay Pacific</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
