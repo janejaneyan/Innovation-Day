@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cathay Pacific × WorkBuddy — HKG↔DXB Itinerary</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #F0F2F5; color: #1A1A2E; -webkit-font-smoothing: antialiased; line-height: 1.6;
+}
+.container { max-width: 1200px; margin: 0 auto; padding: 24px 16px; }
+
+/* Header */
+.brand-header {
+  background: linear-gradient(135deg, #004D3A 0%, #00604C 100%);
+  padding: 24px 28px; border-radius: 12px 12px 0 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+.brand-header .wordmark .x { color: #00B894; }
+.brand-header .sub {
+  color: rgba(255,255,255,0.72); font-size: 12px; max-width: 90%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+/* Content area */
+.content { background: #fff; border-radius: 0 0 12px 12px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+/* Data source badge */
+.source-badge {
+  display: inline-block; background: #FFF3CD; color: #856404; font-size: 11px;
+  padding: 4px 10px; border-radius: 4px; margin-bottom: 16px;
+  border: 1px solid #FFEEBA;
+}
+
+/* Leg label */
+.leg-label {
+  font-size: 16px; font-weight: 700; color: #004D3A; margin: 20px 0 10px;
+  padding-left: 4px; border-left: 3px solid #00604C; padding: 4px 8px;
+}
+
+/* Flight cards */
+.flight-card {
+  background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+.flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+.flight-card.recommended { border-left: 4px solid #00604C; }
+.flight-card .badge {
+  display: inline-block; background: #00604C; color: #fff; font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 4px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.flight-card h2 { font-size: 28px; font-weight: 700; color: #1A1A2E; margin: 4px 0 8px; }
+.flight-card .aircraft-tag { font-size: 12px; color: #00604C; font-weight: 600; margin-left: 8px; }
+.flight-card .route { font-size: 16px; color: #333; margin: 8px 0; display: flex; align-items: center; gap: 8px; }
+.flight-card .route .arrow { color: #00604C; }
+.flight-card .route .time-block { font-weight: 700; font-size: 18px; }
+.flight-card .price { font-size: 22px; font-weight: 700; color: #00604C; margin: 8px 0; }
+.flight-card .price .ref { font-size: 11px; font-weight: 400; color: #888; }
+.flight-card .meta { font-size: 13px; color: #888; margin: 4px 0; display: flex; gap: 16px; flex-wrap: wrap; }
+.flight-card .meta span { display: flex; align-items: center; gap: 4px; }
+
+/* Booking button */
+.btn-tongcheng {
+  display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C;
+  color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px;
+  text-decoration: none; text-align: center; transition: background 0.2s;
+}
+.btn-tongcheng:hover { background: #c92c2e; }
+
+/* Info cards */
+.info-card {
+  background: #fff; border-radius: 12px; padding: 20px; margin: 12px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.info-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #1A1A2E; }
+.card-weather { border-left: 4px solid #3498DB; }
+.card-fx { border-left: 4px solid #27AE60; }
+.card-notes { border-left: 4px solid #F39C12; }
+
+/* Weather grid */
+.weather-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.weather-day { text-align: center; padding: 12px 8px; background: #F8FAFB; border-radius: 8px; }
+.weather-day .date { font-size: 12px; color: #888; margin-bottom: 4px; }
+.weather-day .temp { font-size: 22px; font-weight: 700; color: #3498DB; }
+.weather-day .lo { font-size: 13px; color: #666; }
+.weather-day .desc { font-size: 12px; color: #555; margin-top: 4px; }
+.weather-warning { font-size: 11px; color: #E74C3C; margin-top: 8px; text-align: center; }
+
+/* FX */
+.fx-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.fx-rate { font-size: 24px; font-weight: 700; color: #27AE60; }
+.fx-date { font-size: 12px; color: #888; }
+
+/* Notes list */
+.notes-list { list-style: none; padding: 0; }
+.notes-list li { padding: 8px 0; border-bottom: 1px solid #F0F2F5; font-size: 13px; display: flex; gap: 8px; }
+.notes-list li:last-child { border-bottom: none; }
+.notes-list .icon { flex-shrink: 0; }
+
+/* QR Code */
+#qr-container {
+  display: flex; flex-direction: column; align-items: center; padding: 20px;
+  background: #FAFBFC; border-radius: 12px; text-align: center;
+}
+#qr-container .qr-label { font-size: 13px; color: #555; margin-bottom: 8px; font-weight: 600; }
+#qr-container .qr-hint { font-size: 11px; color: #999; margin-top: 8px; }
+
+/* Footer */
+footer {
+  background: #F0F2F5; padding: 16px 24px; border-radius: 0 0 12px 12px;
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  font-size: 11px; color: #888; border-top: 1px solid #E8EAED;
+}
+footer .brand { color: #00604C; font-weight: 600; }
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .main-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; }
+  #qr-mobile { display: none; }
+}
+/* Mobile layout */
+@media (max-width: 767px) {
+  .main-grid { display: flex; flex-direction: column; }
+  #qr-container { display: none; }
+  #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 16px; margin-top: 12px; }
+  .brand-header .wordmark { font-size: 16px; }
+  .brand-header .sub { font-size: 11px; }
+  .btn-tongcheng { width: 100%; }
+  .flight-card h2 { font-size: 22px; }
+  .weather-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .weather-day .temp { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="brand-header">
+  <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+  <span class="sub">My boss needs to go to Dubai for 3 days. CX non-stop only, business class only.</span>
+</header>
+
+<div class="content">
+
+<div class="source-badge">⚠️ Live fetch via 同程 MCP unavailable (auth required) — showing reference pricing from cathaypacific.com & web search. Data as of Jul 27, 2026.</div>
+
+<!-- Desktop QR -->
+<div class="main-grid">
+<div class="flights-column">
+
+<!-- OUTBOUND -->
+<div class="leg-label">✈ OUTBOUND — Monday, 3 August 2026</div>
+
+<div class="flight-card recommended">
+  <span class="badge">★ Recommended</span>
+  <h2>CX731 <span class="aircraft-tag">Airbus A350-900</span></h2>
+  <div class="route">
+    <span class="time-block">HKG 17:50</span>
+    <span class="arrow">✈</span>
+    <span class="time-block">DXB 21:35</span>
+    <span style="font-size:12px;color:#888;">(same day)</span>
+  </div>
+  <div class="price">
+    HKD 34,476<span class="ref"> round-trip · ~HKD 17,238/leg reference</span>
+  </div>
+  <div class="meta">
+    <span>⏱ ~7h 45m</span>
+    <span>🛫 Non-stop</span>
+    <span>🛋 Business (J)</span>
+    <span>🍽 Meal + Lounge</span>
+  </div>
+  <div class="meta" style="margin-top:2px;">
+    <span>📍 HKG Terminal 1</span>
+    <span>📍 DXB Terminal 1</span>
+  </div>
+  <a href="https://flights.cathaypacific.com/en_HK/flights-from-hong-kong-to-dubai?cabin=business" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on cathaypacific.com</a>
+</div>
+
+<p style="font-size:12px;color:#888;margin:4px 0 16px 4px;">CX operates one daily non-stop HKG→DXB flight. Monday Aug 3 = A350-900. This is the only CX non-stop option.</p>
+
+<!-- INBOUND -->
+<div class="leg-label">✈ INBOUND — Wednesday, 5 August 2026</div>
+
+<div class="flight-card recommended">
+  <span class="badge">★ Recommended</span>
+  <h2>CX738 <span class="aircraft-tag">Boeing 777-300ER</span></h2>
+  <div class="route">
+    <span class="time-block">DXB 22:55</span>
+    <span class="arrow">✈</span>
+    <span class="time-block">HKG 11:10<span style="font-size:12px;font-weight:400;">+1</span></span>
+    <span style="font-size:12px;color:#888;">(next day)</span>
+  </div>
+  <div class="price">
+    HKD 34,476<span class="ref"> round-trip · ~HKD 17,238/leg reference</span>
+  </div>
+  <div class="meta">
+    <span>⏱ ~8h 15m</span>
+    <span>🛫 Non-stop</span>
+    <span>🛋 Business (J)</span>
+    <span>🍽 Meal + Lounge</span>
+  </div>
+  <div class="meta" style="margin-top:2px;">
+    <span>📍 DXB Terminal 1</span>
+    <span>📍 HKG Terminal 1</span>
+  </div>
+  <a href="https://flights.cathaypacific.com/en_HK/flights-from-hong-kong-to-dubai?cabin=business" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on cathaypacific.com</a>
+</div>
+
+<p style="font-size:12px;color:#888;margin:4px 0 16px 4px;">CX operates one daily non-stop DXB→HKG flight. Wednesday Aug 5 = Boeing 777-300ER. Perfect timing: depart after last meeting, arrive Hong Kong next morning.</p>
+
+</div><!-- end flights-column -->
+
+<!-- Desktop QR -->
+<div id="qr-container">
+  <div class="qr-label">📱 Scan with WeChat</div>
+  <div id="qrcode"></div>
+  <div class="qr-hint">to view on mobile</div>
+</div>
+
+</div><!-- end main-grid -->
+
+<!-- Trip Summary -->
+<div class="info-card" style="margin-top:16px; background:linear-gradient(135deg,#F0F9F4 0%,#E8F5EC 100%);border-left:4px solid #00604C;">
+  <h3>📋 Trip Summary</h3>
+  <table style="width:100%;font-size:13px;border-collapse:collapse;">
+    <tr><td style="padding:4px 8px;color:#888;">Route</td><td style="padding:4px 8px;font-weight:600;">Hong Kong (HKG) ↔ Dubai (DXB)</td></tr>
+    <tr><td style="padding:4px 8px;color:#888;">Outbound</td><td style="padding:4px 8px;">Mon 3 Aug — CX731 HKG 17:50 → DXB 21:35 (A350-900)</td></tr>
+    <tr><td style="padding:4px 8px;color:#888;">Return</td><td style="padding:4px 8px;">Wed 5 Aug — CX738 DXB 22:55 → HKG 11:10+1 (B777-300ER)</td></tr>
+    <tr><td style="padding:4px 8px;color:#888;">Days on ground</td><td style="padding:4px 8px;">3 days (Mon evening – Wed night)</td></tr>
+    <tr><td style="padding:4px 8px;color:#888;">Class</td><td style="padding:4px 8px;font-weight:600;color:#00604C;">Business (J) — Non-stop only</td></tr>
+    <tr><td style="padding:4px 8px;color:#888;">Est. round-trip</td><td style="padding:4px 8px;font-weight:700;color:#00604C;font-size:16px;">HKD 34,476</td></tr>
+  </table>
+</div>
+
+<!-- Weather -->
+<div class="info-card card-weather">
+  <h3>🌡 Destination Weather — Dubai, UAE (Aug 3–5)</h3>
+  <div class="weather-grid">
+    <div class="weather-day">
+      <div class="date">Mon, Aug 3</div>
+      <div class="temp">39°C</div>
+      <div class="lo">Low 33°C</div>
+      <div class="desc">☀ Clear</div>
+    </div>
+    <div class="weather-day">
+      <div class="date">Tue, Aug 4</div>
+      <div class="temp">37°C</div>
+      <div class="lo">Low 33°C</div>
+      <div class="desc">☀ Clear</div>
+    </div>
+    <div class="weather-day">
+      <div class="date">Wed, Aug 5</div>
+      <div class="temp">40°C</div>
+      <div class="lo">Low 34°C</div>
+      <div class="desc">☀ Clear</div>
+    </div>
+  </div>
+  <div class="weather-warning">⚠ Extreme heat — stay hydrated, limit outdoor exposure 12:00–16:00. All meetings indoors with A/C.</div>
+</div>
+
+<!-- FX -->
+<div class="info-card card-fx">
+  <h3>💱 Live Exchange Rate</h3>
+  <div class="fx-row">
+    <span class="fx-rate">1 HKD ≈ 0.4685 AED</span>
+    <span style="font-size:13px;color:#666;">(1 AED ≈ 2.13 HKD)</span>
+  </div>
+  <div class="fx-date">Rate date: 15 Jul 2026 · Source: HKMA / MTFX | AED is pegged to USD at 3.6725</div>
+</div>
+
+<!-- Travel Notes -->
+<div class="info-card card-notes">
+  <h3>📌 Airline Travel Notes</h3>
+  <ul class="notes-list">
+    <li><span class="icon">🛂</span><strong>Visa:</strong> HKSAR passport holders get 30-day visa-free entry to UAE. No pre-arrangement needed. Ensure passport has 6+ months validity.</li>
+    <li><span class="icon">🔋</span><strong>Carry-on Batteries:</strong> Power banks & lithium batteries MUST be in carry-on, NOT checked luggage. Max 100Wh per battery. Spare batteries individually protected.</li>
+    <li><span class="icon">🧳</span><strong>Baggage (Business):</strong> 2 checked bags × 32kg each + 1 carry-on 10kg + 1 personal item. Cathay Pacific Business Class allowance. Golf/sports equipment counts toward checked allowance.</li>
+    <li><span class="icon">🔌</span><strong>Power Sockets:</strong> UAE uses Type G (BS 1363, same as Hong Kong) — 230V/50Hz. No adaptor needed for HK devices. USB ports available in CX Business cabin.</li>
+    <li><span class="icon">🚕</span><strong>Airport→City:</strong> Dubai Metro Red Line connects DXB Terminal 1 to city centre (~30 min, AED 5-8). Taxi ~AED 70-100 to Downtown/Business Bay (~20 min). Uber/Careem available. Pre-book hotel limo for VIP arrival.</li>
+  </ul>
+</div>
+
+<!-- Mobile QR -->
+<div id="qr-mobile">
+  <div style="font-size:12px;color:#555;font-weight:600;margin-bottom:4px;">📱 Scan to view on mobile</div>
+  <div id="qrcode-mini"></div>
+</div>
+
+</div><!-- end content -->
+
+<footer>
+  <span>Generated at: 13:57 HKT · 27 Jul 2026 | Data: cathaypacific.com, AeroRoutes, directflights.com, weather25.com, HKMA/MTFX</span>
+  <span class="brand">Powered by WorkBuddy × Cathay Pacific</span>
+</footer>
+
+</div><!-- end container -->
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
