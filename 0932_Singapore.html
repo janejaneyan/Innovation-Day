@@ -1,0 +1,186 @@
+<!-- Cathay Pacific x WorkBuddy round-trip itinerary: HKG <-> Singapore -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HKG ⇄ Singapore Itinerary</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; -webkit-font-smoothing: antialiased; background: #F0F2F5;
+    font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color: #1A1A2E; }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  .brand-header { background: #004D3A; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px; }
+  .brand-header .wordmark { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: .3px; }
+  .brand-header .wordmark .x { color: #00B894; padding: 0 4px; }
+  .brand-header .sub { color: rgba(255,255,255,0.72); font-size: 12px; max-width: 90%;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .content { padding: 24px; }
+  .leg-label { font-size: 16px; font-weight: 700; color: #004D3A; margin: 20px 0 10px; padding-left: 4px; }
+  .leg-label:first-child { margin-top: 0; }
+  .flight-card { background: #fff; border-radius: 12px; padding: 18px 20px; margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: .2s; }
+  .flight-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .flight-card.recommended { border-left: 4px solid #00604C; }
+  .flight-card.alternate { border-left: 2px solid #CCC; }
+  .badge { display: inline-block; background: #00604C; color: #fff; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 4px; margin-bottom: 8px; }
+  .alt-tag { display: inline-block; color: #999; font-size: 12px; font-weight: 600; margin-bottom: 6px; }
+  .flight-no { font-size: 26px; font-weight: 700; color: #1A1A2E; margin: 2px 0; }
+  .route { font-size: 16px; color: #333; margin: 4px 0; }
+  .price { font-size: 22px; font-weight: 700; color: #00604C; margin: 6px 0 2px; }
+  .orig-price { font-size: 12px; color: #999; }
+  .meta { font-size: 13px; color: #888; margin-top: 2px; }
+  .btn-tongcheng { display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C;
+    color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none;
+    text-align: center; transition: background .2s; }
+  .btn-tongcheng:hover { background: #c92c2e; }
+  .card { background: #fff; border-radius: 12px; padding: 18px 20px; margin-top: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .card h3 { margin: 0 0 12px; font-size: 16px; }
+  .card.weather { border-left: 4px solid #3498DB; }
+  .card.fx { border-left: 4px solid #27AE60; }
+  .card.notes { border-left: 4px solid #F39C12; }
+  .wx-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+  .wx-day { text-align: center; padding: 10px; background: #F7FAFC; border-radius: 8px; }
+  .wx-day .d { font-size: 13px; color: #666; }
+  .wx-day .t { font-size: 22px; font-weight: 700; color: #3498DB; margin: 4px 0; }
+  .wx-day .s { font-size: 12px; color: #777; }
+  .fx p { margin: 4px 0; font-size: 18px; font-weight: 700; color: #27AE60; }
+  .fx small { color: #999; }
+  .notes ul { margin: 0; padding-left: 20px; }
+  .notes li { margin: 8px 0; font-size: 14px; line-height: 1.5; }
+  #qr-container { display: flex; flex-direction: column; align-items: center; padding: 18px;
+    background: #FAFBFC; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); height: fit-content; }
+  #qr-container .qr-label { font-size: 12px; color: #555; margin-top: 12px; text-align: center; max-width: 180px; }
+  #qrcode { display: flex; }
+  #qr-mobile { display: none; }
+  footer { background: #F0F2F5; padding: 16px 24px; display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 8px; font-size: 12px; color: #888; border-top: 1px solid #E2E6EA; }
+  footer .r { color: #00604C; font-weight: 600; }
+
+  @media (min-width: 768px) {
+    .main-grid { display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: start; }
+  }
+  @media (max-width: 767px) {
+    .main-grid { display: flex; flex-direction: column; }
+    #qr-container { display: none; }
+    .wx-grid { grid-template-columns: 1fr; }
+    .brand-header .wordmark { font-size: 16px; }
+    .brand-header .sub { font-size: 11px; }
+    .btn-tongcheng { width: 100%; }
+    #qr-mobile { display: flex; flex-direction: column; align-items: center; padding: 16px;
+      margin-top: 16px; background: #FAFBFC; border-radius: 12px; }
+    #qr-mobile .qr-label { font-size: 12px; color: #555; margin-top: 10px; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">Client wants me in Singapore tomorrow afternoon, dinner arrival, back HKG Wednesday noon.</span>
+  </header>
+
+  <div class="content">
+    <div class="main-grid">
+      <!-- LEFT: flights + info -->
+      <div>
+        <div class="leg-label">✈ OUTBOUND · HKG → SIN · Tue Jul 28, 2026</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended</span>
+          <div class="flight-no">CX711 · Cathay Pacific</div>
+          <div class="route">HKG T1 17:00 ✈ SIN T4 20:50</div>
+          <div class="price">HKD 5,845</div>
+          <div class="orig-price">Original: ¥5,048 CNY</div>
+          <div class="meta">⏱ 3h 50m · Direct · arrives 20:50 (late dinner)</div>
+          <a href="https://s.ly.com/1iI3gc6Jj" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-tag">Alternative · perfect dinner timing</span>
+          <div class="flight-no">CX635 · Cathay Pacific</div>
+          <div class="route">HKG T1 15:05 ✈ SIN 19:05</div>
+          <div class="price">HKD 9,174</div>
+          <div class="orig-price">Original: ¥7,922 CNY · lands 19:05, ideal for dinner</div>
+          <div class="meta">⏱ 4h 00m · Direct</div>
+          <a href="https://s.ly.com/2iI3gc6Kj" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="leg-label">✈ INBOUND · SIN → HKG · Wed Jul 29, 2026</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended</span>
+          <div class="flight-no">SQ874 · Singapore Airlines</div>
+          <div class="route">SIN T3 07:25 ✈ HKG T1 11:20</div>
+          <div class="price">HKD 2,154</div>
+          <div class="orig-price">Original: ¥1,861 CNY · lands 11:20, before noon ✓</div>
+          <div class="meta">⏱ 3h 55m · Direct · best value + arrives before noon</div>
+          <a href="https://s.ly.com/IiW3gc6Ej" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="alt-tag">Alternative · Cathay (arrives afternoon)</span>
+          <div class="flight-no">CX758 · Cathay Pacific</div>
+          <div class="route">SIN T4 13:25 ✈ HKG T1 17:35</div>
+          <div class="price">HKD 2,211</div>
+          <div class="orig-price">Original: ¥1,910 CNY · arrives 17:35 (misses noon target)</div>
+          <div class="meta">⏱ 4h 10m · Direct</div>
+          <a href="https://s.ly.com/JiW3gc6Fj" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="card weather">
+          <h3>🌤 Singapore Weather (next 3 days)</h3>
+          <div class="wx-grid">
+            <div class="wx-day"><div class="d">Tue Jul 28</div><div class="t">27–29°C</div><div class="s">Light rain → cloudy · wind 15 km/h · rain ~30%</div></div>
+            <div class="wx-day"><div class="d">Wed Jul 29</div><div class="t">27–30°C</div><div class="s">Partly cloudy, patchy rain · wind 16 km/h</div></div>
+            <div class="wx-day"><div class="d">Thu Jul 30</div><div class="t">27–29°C</div><div class="s">Cloudy with light rain · wind 17 km/h</div></div>
+          </div>
+        </div>
+
+        <div class="card fx">
+          <h3>💱 Live Exchange Rate</h3>
+          <p>1 CNY ≈ 1.158 HKD &nbsp;|&nbsp; 1 SGD ≈ 6.08 HKD</p>
+          <small>Rate date: 2026-07-27 · Source: live FX feed. All fares fetched in CNY via 同程 MCP and converted to HKD.</small>
+        </div>
+
+        <div class="card notes">
+          <h3>📌 Travel Notes</h3>
+          <ul>
+            <li>✈ <b>Visa:</b> HKSAR passport holders enjoy visa-free entry to Singapore (up to 30 days). Complete the online <b>SG Arrival Card</b> within 3 days before arrival.</li>
+            <li>🔌 <b>Power &amp; battery:</b> Singapore uses <b>Type G</b> sockets (UK 3-pin), 230V — bring an adapter. Spare lithium batteries / power banks must go in <b>carry-on only</b>, never checked.</li>
+            <li>🚆 <b>Airport → city:</b> Changi to CBD is ~20 min. Fastest is Grab/taxi (~SGD 25–35); cheapest is the MRT East-West Line. All CX/SQ options here land at Changi T4/T3.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- RIGHT: QR (desktop) -->
+      <div id="qr-container">
+        <div id="qrcode"></div>
+        <div class="qr-label">📱 Scan with WeChat to view this itinerary on mobile</div>
+      </div>
+    </div>
+
+    <!-- QR (mobile) -->
+    <div id="qr-mobile">
+      <div id="qrcode-mini"></div>
+      <div class="qr-label">Scan to view on mobile</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Generated at: 2026-07-27 09:32 · Steps: 6 · Data Source: 同程 MCP (tc-chengxin)</span>
+    <span class="r">Powered by WorkBuddy × Cathay Pacific</span>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
