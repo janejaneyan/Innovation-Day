@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HKG ⇄ DXB · Cathay Pacific × WorkBuddy</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F0F2F5; font-family: "PingFang SC","Microsoft YaHei","Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; color:#1A1A2E; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding-bottom: 40px; }
+
+  .brand-header { background:#004D3A; padding:22px 28px; display:flex; flex-direction:column; gap:6px; }
+  .brand-header .wordmark { color:#fff; font-size:22px; font-weight:700; letter-spacing:.3px; }
+  .brand-header .wordmark .x { color:#00B894; padding:0 4px; }
+  .brand-header .sub { color:rgba(255,255,255,0.72); font-size:12px; max-width:90%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+
+  .alert { margin:20px 28px 4px; padding:16px 18px; background:#FFF4E5; border-left:5px solid #F39C12; border-radius:10px; font-size:14px; line-height:1.55; }
+  .alert b { color:#B9770E; }
+
+  .content { padding: 12px 28px 0; }
+  .main-grid { }
+  .leg-label { font-size:16px; font-weight:700; color:#004D3A; margin:22px 0 10px; padding-left:2px; display:flex; align-items:center; gap:8px; }
+
+  .flight-card { background:#fff; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.06); padding:18px 20px; margin-bottom:14px; transition:.2s; }
+  .flight-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.1); }
+  .flight-card.recommended { border-left:4px solid #00604C; }
+  .flight-card.alternate { border-left:2px solid #CCC; }
+  .flight-card.unavailable { border-left:4px solid #999; background:#FAFAFA; }
+  .badge { display:inline-block; background:#00604C; color:#fff; font-size:11px; font-weight:700; padding:3px 9px; border-radius:4px; margin-bottom:8px; }
+  .badge.grey { background:#999; }
+  .badge.alt { background:#eee; color:#666; }
+  .flight-card h2 { margin:4px 0 6px; font-size:26px; font-weight:800; }
+  .flight-card h2 small { font-size:13px; font-weight:600; color:#888; }
+  .route { font-size:16px; color:#333; margin-bottom:6px; }
+  .price { font-size:22px; font-weight:800; color:#00604C; }
+  .price small { display:block; font-size:11px; font-weight:400; color:#999; margin-top:2px; }
+  .meta { font-size:13px; color:#888; margin-top:4px; }
+  .btn-tongcheng { display:inline-block; margin-top:12px; padding:10px 24px; background:#E4393C; color:#fff; font-size:14px; font-weight:700; border-radius:6px; text-decoration:none; text-align:center; transition:background .2s; }
+  .btn-tongcheng:hover { background:#c92c2e; }
+  .btn-cx { background:#00604C; }
+  .btn-cx:hover { background:#00876A; }
+
+  .card { background:#fff; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.06); padding:18px 20px; margin-top:16px; }
+  .card h3 { margin:0 0 12px; font-size:16px; }
+  .card.weather { border-left:4px solid #3498DB; }
+  .card.fx { border-left:4px solid #27AE60; }
+  .card.notes { border-left:4px solid #F39C12; }
+  .wgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .wcell { text-align:center; padding:12px; background:#F7FAFD; border-radius:10px; }
+  .wcell .d { font-size:13px; color:#666; }
+  .wcell .t { font-size:26px; font-weight:800; color:#3498DB; margin:4px 0; }
+  .wcell .s { font-size:12px; color:#888; }
+  .card.fx p { font-size:18px; font-weight:700; margin:4px 0; }
+  .card.fx small, .card.weather small { color:#999; font-size:12px; }
+  .card.notes ul { margin:0; padding-left:20px; line-height:1.7; font-size:14px; }
+
+  #qr-container { display:flex; flex-direction:column; align-items:center; padding:18px; background:#FAFBFC; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,0.06); }
+  #qr-container .lbl { font-size:12px; color:#555; margin-top:10px; text-align:center; }
+  #qrcode { padding:8px; background:#fff; border-radius:8px; }
+  #qr-mobile { display:none; }
+
+  footer { margin:26px 28px 0; padding:16px 0; border-top:1px solid #E2E5EA; display:flex; justify-content:space-between; font-size:12px; color:#888; flex-wrap:wrap; gap:8px; }
+  footer .right { color:#00604C; font-weight:600; }
+
+  @media (min-width: 768px) {
+    .main-grid { display:grid; grid-template-columns:1fr 240px; gap:24px; align-items:start; }
+  }
+  @media (max-width: 767px) {
+    .main-grid { display:flex; flex-direction:column; }
+    #qr-container { display:none; }
+    #qr-mobile { display:flex; flex-direction:column; align-items:center; padding:16px; margin-top:16px; background:#FAFBFC; border-radius:12px; }
+    #qr-mobile .lbl { font-size:12px; color:#555; margin-top:8px; }
+    .brand-header .wordmark { font-size:16px; }
+    .brand-header .sub { font-size:11px; }
+    .wgrid { grid-template-columns:1fr; }
+    .btn-tongcheng { width:100%; }
+    .content { padding:12px 16px 0; }
+    .alert, footer { margin-left:16px; margin-right:16px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">My boss needs to go to Dubai for 3 days. CX non-stop only, business class only.</span>
+  </header>
+
+  <div class="alert">
+    <b>⚠ Constraint conflict — please read.</b> Cathay Pacific <b>does</b> fly HKG⇄DXB non-stop in Business (A350/777, ~9h15m), but its Middle East passenger service is currently <b>suspended and only resumes on 1 Sept 2026</b>. For the requested dates (<b>Wed 29 Jul → Fri 31 Jul 2026</b>), <b>no CX flight is operating</b>. Below: (1) the only genuine non-stop Business option flying on these dates — Emirates; (2) the CX non-stop Business product to book once it resumes 1 Sept. Fares shown in HKD (converted from live CNY quotes).
+  </div>
+
+  <div class="content">
+    <div class="main-grid">
+      <div class="legs">
+
+        <div class="leg-label">✈ OUTBOUND · Wed 29 Jul 2026 · HKG → DXB</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended (non-stop Business, flies on date)</span>
+          <h2>EK383 <small>Emirates · Business</small></h2>
+          <div class="route">HKG T1 19:10 ✈ DXB T3 23:00 (local)</div>
+          <div class="price">HKD 3,831 <small>≈ ¥3,309 · lowest non-stop Business on date</small></div>
+          <div class="meta">⏱ 7h 50m · Non-stop · A380 / 777</div>
+          <a href="https://s.ly.com/nigyic6DQ" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="badge alt">Alt · non-stop Business</span>
+          <h2>EK381 <small>Emirates · Business</small></h2>
+          <div class="route">HKG T1 00:40 ✈ DXB T3 04:25 (local) · red-eye</div>
+          <div class="price">HKD 4,690 <small>≈ ¥4,050 · fastest, 7h45m</small></div>
+          <div class="meta">⏱ 7h 45m · Non-stop · 777</div>
+          <a href="https://s.ly.com/0i3xic63P" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card unavailable">
+          <span class="badge grey">CX — available from 1 Sept 2026</span>
+          <h2>CX741 <small>Cathay Pacific · Business (A350)</small></h2>
+          <div class="route">HKG → DXB T1 · non-stop ~9h15m</div>
+          <div class="price" style="color:#999;">Not operating 29 Jul</div>
+          <div class="meta">Daily service resumes 1 Sept 2026. Round-trip Business from ~HKD 34,476 (CX official, seen for Oct/Sept dates).</div>
+          <a href="https://flights.cathaypacific.com/destinations/en_HK/flights-from-hong-kong-to-dubai" target="_blank" rel="noopener noreferrer" class="btn-tongcheng btn-cx">✈ Book on Cathay (Sept+)</a>
+        </div>
+
+        <div class="leg-label">✈ INBOUND · Fri 31 Jul 2026 · DXB → HKG</div>
+
+        <div class="flight-card recommended">
+          <span class="badge">★ Recommended (non-stop Business, flies on date)</span>
+          <h2>EK380 <small>Emirates · Business</small></h2>
+          <div class="route">DXB T3 10:00 ✈ HKG T1 22:05 (local)</div>
+          <div class="price">HKD 6,289 <small>≈ ¥5,430 · daytime, lowest Business</small></div>
+          <div class="meta">⏱ 8h 05m · Non-stop · A380</div>
+          <a href="https://s.ly.com/Vivxic6qP" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card alternate">
+          <span class="badge alt">Alt · non-stop Business</span>
+          <h2>EK382 <small>Emirates · Business</small></h2>
+          <div class="route">DXB T3 03:15 ✈ HKG T1 15:25 (local) · red-eye</div>
+          <div class="price">HKD 6,289 <small>≈ ¥5,430 · arrives mid-afternoon</small></div>
+          <div class="meta">⏱ 8h 10m · Non-stop · 777</div>
+          <a href="https://s.ly.com/Piczic61R" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight-card unavailable">
+          <span class="badge grey">CX — available from 1 Sept 2026</span>
+          <h2>CX742 <small>Cathay Pacific · Business (A350)</small></h2>
+          <div class="route">DXB T1 → HKG · non-stop ~8h</div>
+          <div class="price" style="color:#999;">Not operating 31 Jul</div>
+          <div class="meta">Daily service resumes 1 Sept 2026. Book direct on cathaypacific.com for Business fares & Miles.</div>
+          <a href="https://flights.cathaypacific.com/destinations/en_HK/flights-from-hong-kong-to-dubai" target="_blank" rel="noopener noreferrer" class="btn-tongcheng btn-cx">✈ Book on Cathay (Sept+)</a>
+        </div>
+
+        <div style="margin-top:14px; padding:12px 16px; background:#EAF6F1; border-radius:10px; font-size:14px;">
+          <b>Round-trip total (Emirates non-stop Business, recommended pair):</b>
+          <span style="color:#00604C; font-weight:800;">HKD 10,120</span> <span style="color:#999;">(≈ ¥8,739)</span>
+        </div>
+      </div>
+
+      <div id="qr-container">
+        <div id="qrcode"></div>
+        <div class="lbl">📱 Scan with WeChat<br>to view on mobile</div>
+      </div>
+    </div>
+
+    <div class="card weather">
+      <h3>Destination Weather · Dubai (next 3 days)</h3>
+      <div class="wgrid">
+        <div class="wcell"><div class="d">Wed 29 Jul</div><div class="t">42°C</div><div class="s">Clear · min 34°C · UV 8 · wind NW 19kph</div></div>
+        <div class="wcell"><div class="d">Thu 30 Jul</div><div class="t">44°C</div><div class="s">Clear · min 34°C · extreme heat · 0mm rain</div></div>
+        <div class="wcell"><div class="d">Fri 31 Jul</div><div class="t">42°C</div><div class="s">Clear · min 31°C · UV 8 · wind NW</div></div>
+      </div>
+      <small>Extreme desert heat — hydrate, sun protection essential, minimise midday outdoor time. Source: meteoblue / weather2travel, seen 2026-07-27.</small>
+    </div>
+
+    <div class="card fx">
+      <h3>Live Exchange Rate</h3>
+      <p>1 CNY ≈ 1.1581 HKD &nbsp;·&nbsp; 1 AED ≈ 2.12 HKD (USD-pegged)</p>
+      <small>Fares fetched in CNY (¥) and converted to HKD. Rate date: 2026-07-24 · Source: frankfurter.app. AED derived from fixed USD peg (1 USD = 3.6725 AED).</small>
+    </div>
+
+    <div class="card notes">
+      <h3>Travel Notes (for the boss)</h3>
+      <ul>
+        <li>✈ <b>Visa:</b> HKSAR passport holders get <b>visa-free entry to the UAE (30 days)</b> — no pre-arranged visa needed. Passport must have ≥6 months validity.</li>
+        <li>🔌 <b>Power & baggage:</b> UAE uses <b>Type G sockets (UK 3-pin), 230V</b> — bring a UK adapter. Power banks must go in <b>carry-on only</b> (≤100Wh); Emirates Business allows 2× checked bags up to 32kg each.</li>
+        <li>🚕 <b>Airport→city:</b> DXB Terminal 3 (Emirates) to Downtown ≈ 20 min by taxi, or the <b>Metro Red Line</b> (~30 min). Given the 42–44°C heat, pre-book a car or use the air-conditioned metro.</li>
+      </ul>
+    </div>
+
+    <div id="qr-mobile">
+      <div id="qrcode-mini"></div>
+      <div class="lbl">Scan to view on mobile</div>
+    </div>
+  </div>
+
+  <footer>
+    <span class="left">Generated 2026-07-27 12:30 · Steps: 6 · Data: 同程 MCP + Cathay official + meteoblue</span>
+    <span class="right">Powered by WorkBuddy × Cathay Pacific</span>
+  </footer>
+</div>
+
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
