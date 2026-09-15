@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tokyo 4-Day Plan · 25–28 Sep 2026 · Exhibition Trip</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #F0F2F5; color: #1A1A2E; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px 48px; }
+
+  .brand-header {
+    background: #004D3A; color: #fff; padding: 28px 32px; margin: 0 -16px 24px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .wordmark { font-size: 26px; font-weight: 800; letter-spacing: .5px; }
+  .wordmark .x { color: #4FD1A5; margin: 0 2px; }
+  .sub { font-size: 14px; color: rgba(255,255,255,.82); }
+  .meta-strip { font-size: 12.5px; color: rgba(255,255,255,.62); margin-top: 4px; }
+
+  .layout { display: flex; gap: 24px; align-items: flex-start; }
+  .main { flex: 1 1 auto; min-width: 0; }
+  .side { flex: 0 0 240px; }
+
+  .qr-panel {
+    background: #fff; border: 1px solid #E3E7EC; border-radius: 12px; padding: 20px 16px;
+    text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,.06); position: sticky; top: 16px;
+  }
+  .qr-panel h3 { font-size: 13px; color: #00604C; letter-spacing: .4px; margin-bottom: 14px; }
+  #qrcode { display: inline-block; padding: 10px; border: 1px solid #E3E7EC; border-radius: 8px; background: #fff; }
+  #qrcode img, #qrcode canvas { display: block; width: 200px; height: 200px; }
+  .qr-cap { font-size: 12px; color: #6B7480; margin-top: 12px; }
+  .qr-url { font-size: 10.5px; color: #9AA3AE; margin-top: 8px; word-break: break-all; }
+
+  .section-title {
+    font-size: 13px; font-weight: 800; letter-spacing: 1.2px; color: #00604C;
+    text-transform: uppercase; margin: 28px 0 12px; padding-left: 10px; border-left: 4px solid #00604C;
+  }
+
+  .day {
+    background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    margin-bottom: 16px; overflow: hidden;
+  }
+  .day-head {
+    background: linear-gradient(135deg, #00604C 0%, #00876A 100%); color: #fff;
+    padding: 13px 20px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  }
+  .day-head .dn { font-size: 15px; font-weight: 800; letter-spacing: .3px; }
+  .day-head .dd { font-size: 12.5px; opacity: .92; }
+  .wx {
+    font-size: 11.5px; background: rgba(255,255,255,.16); padding: 4px 11px;
+    border-radius: 20px; white-space: nowrap;
+  }
+  .day-body { padding: 6px 20px 16px; }
+  .tl { display: flex; gap: 14px; padding: 11px 0; border-bottom: 1px dashed #EDF0F3; }
+  .tl:last-child { border-bottom: none; }
+  .tt { flex: 0 0 62px; font-size: 13px; font-weight: 800; color: #00604C; padding-top: 1px; }
+  .tc { flex: 1 1 auto; min-width: 0; }
+  .tc .h { font-size: 14px; font-weight: 700; }
+  .tc .d { font-size: 12.5px; color: #6B7480; margin-top: 2px; }
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px;
+    border-radius: 4px; margin-right: 6px;
+  }
+  .tag.flight { background: #E8F4F0; color: #00604C; }
+  .tag.expo { background: #FDF0DC; color: #B8730A; }
+  .tag.food { background: #FDECEC; color: #C0392B; }
+  .tag.move { background: #EDF1F5; color: #5A6673; }
+
+  .hotel {
+    background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    padding: 16px 20px; margin-bottom: 12px; border-left: 4px solid #00604C;
+  }
+  .hotel.alt { border-left-color: #B9C2CC; }
+  .hotel .hn { font-size: 15.5px; font-weight: 800; }
+  .hotel .hm { font-size: 12px; color: #6B7480; margin-top: 2px; }
+  .hotel .hp { font-size: 21px; font-weight: 800; color: #00604C; margin-top: 8px; }
+  .hotel .pm { font-size: 11.5px; color: #9AA3AE; }
+
+  .btn-tongcheng {
+    display: inline-block; margin-top: 12px; padding: 9px 22px; background: #E4393C;
+    color: #fff; font-size: 13.5px; font-weight: 700; border-radius: 6px; text-decoration: none; transition: background .2s;
+  }
+  .btn-tongcheng:hover { background: #c92c2e; }
+
+  .budget {
+    background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    padding: 6px 20px 14px; border-left: 4px solid #27AE60;
+  }
+  .brow { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px dashed #EDF0F3; font-size: 13.5px; }
+  .brow:last-child { border-bottom: none; }
+  .brow b { color: #00604C; font-weight: 800; }
+  .brow.total { border-top: 2px solid #00604C; margin-top: 4px; padding-top: 12px; font-size: 15px; }
+  .brow.total b { font-size: 21px; }
+
+  .notecard {
+    background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    padding: 15px 20px; margin-bottom: 12px; border-left: 4px solid #F39C12;
+  }
+  .notecard h4 { font-size: 14px; color: #C87F0A; margin-bottom: 5px; }
+  .notecard p, .notecard li { font-size: 13.2px; color: #4A5460; }
+  .notecard ul { padding-left: 18px; margin-top: 4px; }
+
+  .callout {
+    background: #FFF8E8; border: 1px solid #F0D9A8; border-radius: 10px;
+    padding: 14px 18px; font-size: 13.2px; color: #6B5210; margin-bottom: 16px;
+  }
+  .callout b { color: #A5761B; }
+
+  footer {
+    margin-top: 32px; padding-top: 16px; border-top: 1px solid #E3E7EC;
+    font-size: 11.5px; color: #9AA3AE; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+
+  #qrcode-mini { display: none; }
+
+  @media (max-width: 767px) {
+    .layout { flex-direction: column; }
+    .side { flex: 1 1 auto; width: 100%; order: 9; }
+    .qr-panel { position: static; margin-top: 20px; }
+    .brand-header { padding: 20px 18px; margin: 0 -16px 18px; }
+    .wordmark { font-size: 20px; }
+    .tt { flex: 0 0 54px; font-size: 12px; }
+    .day-body { padding: 6px 16px 14px; }
+    #qrcode { display: none; }
+    #qrcode-mini { display: inline-block; padding: 8px; border: 1px solid #E3E7EC; border-radius: 8px; }
+    #qrcode-mini img, #qrcode-mini canvas { display: block; width: 120px; height: 120px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">Tokyo 4-Day Plan · Exhibition Trip · 25–28 Sep 2026</span>
+    <span class="meta-strip">HKG ⇄ TYO · 4 days / 3 nights · Built on the CX504 + CX521 round-trip · Hotel &amp; packages via 同程 MCP</span>
+  </header>
+
+  <div class="layout">
+    <div class="main">
+
+      <div class="callout">
+        <b>One change to make this actually 4 days.</b> The original return (CX509, NRT 09:25) would leave you airport-bound at 06:30 on Day 4 — you'd really only get 2.5 days. <b>CX521 (NRT 17:15 → HKG 21:10) is the same fare on 同程 (CNY 3,968 / HKD 4,625)</b>, is not a red-eye, and gives you a full Day 4. This plan is built on CX521. Keep CX509 only if you must be back in the office Monday lunchtime.
+      </div>
+
+      <div class="section-title">Day 1 · Fri 25 Sep · Arrive → Odaiba / Ariake</div>
+      <div class="day">
+        <div class="day-head">
+          <div><span class="dn">Day 1</span> <span class="dd">Fri 25 Sep · Landing, check-in, bay-side evening</span></div>
+          <span class="wx">☁️ 26.9° / 19.9° · Rain 24%</span>
+        </div>
+        <div class="day-body">
+          <div class="tl"><div class="tt">09:05</div><div class="tc"><div class="h"><span class="tag flight">FLIGHT</span>CX504 departs HKG T1</div><div class="d">Cathay Pacific, Boeing 777, non-stop. Overwater daylight sector — no red-eye.</div></div></div>
+          <div class="tl"><div class="tt">14:30</div><div class="tc"><div class="h">Arrive NRT T2</div><div class="d">Have the Visit Japan Web QR ready — immigration + customs usually 20–30 min.</div></div></div>
+          <div class="tl"><div class="tt">15:15</div><div class="tc"><div class="h"><span class="tag move">TRANSFER</span>N'EX or Skyliner to the city</div><div class="d">Skyliner to Nippori 41 min (¥2,580), or N'EX direct to Tokyo Sta. ~60 min. Buy a Suica / PASMO — or just add Suica to Apple Pay before you fly.</div></div></div>
+          <div class="tl"><div class="tt">16:30</div><div class="tc"><div class="h">Check in · Grand Nikko Tokyo Daiba</div><div class="d">Odaiba — 5 min to Tokyo Big Sight / Ariake. Best base if the exhibition is your main reason for the trip.</div></div></div>
+          <div class="tl"><div class="tt">18:00</div><div class="tc"><div class="h"><span class="tag food">DINNER</span>Odaiba bay-side walk</div><div class="d">Odaiba Seaside Park, Statue of Liberty replica, DiverCity Tokyo Plaza. Light jacket — 19.9°C after dark.</div></div></div>
+          <div class="tl"><div class="tt">20:30</div><div class="tc"><div class="h">Early night</div><div class="d">Japan is +1h vs HK. Sleep early; Day 2 starts at the show floor.</div></div></div>
+        </div>
+      </div>
+
+      <div class="section-title">Day 2 · Sat 26 Sep · Exhibition — full day</div>
+      <div class="day">
+        <div class="day-head">
+          <div><span class="dn">Day 2</span> <span class="dd">Sat 26 Sep · The main working day</span></div>
+          <span class="wx">☁️ 23.4° / 19.0° · Rain 20%</span>
+        </div>
+        <div class="day-body">
+          <div class="tl"><div class="tt">08:00</div><div class="tc"><div class="h">Breakfast at the hotel</div><div class="d">Saturday is peak attendance — aim to be on-site before the doors open.</div></div></div>
+          <div class="tl"><div class="tt">09:00</div><div class="tc"><div class="h"><span class="tag expo">EXPO</span>Tokyo Big Sight — full day</div><div class="d">Ariake / Kokusai-Tenjijo. Pre-register online for a visitor badge; bring ~200 business cards if you're working the floor.</div></div></div>
+          <div class="tl"><div class="tt">12:30</div><div class="tc"><div class="h"><span class="tag food">LUNCH</span>On-site or Ariake Garden</div><div class="d">Convention-centre lunch gets a 45-min queue. Ariake Garden (8 min walk) is faster.</div></div></div>
+          <div class="tl"><div class="tt">17:30</div><div class="tc"><div class="h">Debrief + notes</div><div class="d">Same-day write-up while it's fresh — 30 min at a café beats reconstructing it a week later.</div></div></div>
+          <div class="tl"><div class="tt">19:30</div><div class="tc"><div class="h"><span class="tag food">DINNER</span>Ariake / Ginza</div><div class="d">Ginza is ~20 min by Rinkai Line + transfer. Book ahead on a Saturday.</div></div></div>
+        </div>
+      </div>
+
+      <div class="section-title">Day 3 · Sun 27 Sep · Exhibition half-day → Asakusa → Skytree</div>
+      <div class="day">
+        <div class="day-head">
+          <div><span class="dn">Day 3</span> <span class="dd">Sun 27 Sep · Second expo block, then old Tokyo</span></div>
+          <span class="wx">🌦️ 20.8° / 19.2° · Rain 24% · drizzle — bring an umbrella</span>
+        </div>
+        <div class="day-body">
+          <div class="tl"><div class="tt">09:00</div><div class="tc"><div class="h"><span class="tag expo">EXPO</span>Big Sight — targeted second pass</div><div class="d">Revisit the 2–3 stands worth real conversation. Sunday morning is quieter than Saturday.</div></div></div>
+          <div class="tl"><div class="tt">13:00</div><div class="tc"><div class="h"><span class="tag food">LUNCH</span>Toyosu / Kiba</div><div class="d">On the way into town.</div></div></div>
+          <div class="tl"><div class="tt">14:30</div><div class="tc"><div class="h">Sensō-ji, Asakusa</div><div class="d">Tokyo's oldest temple + Nakamise-dōri. ~35 min from Ariake. Light drizzle is forecast — covered arcades help.</div></div></div>
+          <div class="tl"><div class="tt">17:00</div><div class="tc"><div class="h">Tokyo Skytree (Tokyo Solamachi)</div><div class="d">Indoor observation deck at 350m — the right call on a drizzly day. Sunset ~17:45 in late Sept; city lights after 18:00.</div></div></div>
+          <div class="tl"><div class="tt">19:30</div><div class="tc"><div class="h"><span class="tag food">DINNER</span>Solamachi or Ryōgoku</div><div class="d">Ryōgoku is 2 stops away and is the chanko-nabe (sumo hotpot) district — a good option if you want something less touristy.</div></div></div>
+        </div>
+      </div>
+
+      <div class="section-title">Day 4 · Mon 28 Sep · Toyosu → Ginza → fly home</div>
+      <div class="day">
+        <div class="day-head">
+          <div><span class="dn">Day 4</span> <span class="dd">Mon 28 Sep · Full morning, evening return</span></div>
+          <span class="wx">🌧️ 21.7° / 19.7° · Rain 27% · showers</span>
+        </div>
+        <div class="day-body">
+          <div class="tl"><div class="tt">08:00</div><div class="tc"><div class="h"><span class="tag food">BREAKFAST</span>Toyosu Market</div><div class="d">Sushi breakfast at Toyosu — 15 min from Odaiba. Get there before 09:00, most stalls close by 14:00.</div></div></div>
+          <div class="tl"><div class="tt">10:00</div><div class="tc"><div class="h">teamLab Planets, Toyosu</div><div class="d">Barefoot digital art installation, fully indoors — perfect cover if the showers hit. Book a timed slot in advance.</div></div></div>
+          <div class="tl"><div class="tt">12:00</div><div class="tc"><div class="h"><span class="tag food">LUNCH</span>+ last shopping, Ginza</div><div class="d">Mitsukoshi / Ginza Six. Tax-free counter needs your passport — keep it on you, not in the checked bag.</div></div></div>
+          <div class="tl"><div class="tt">13:30</div><div class="tc"><div class="h">Hotel — collect luggage</div><div class="d">Stored at reception since checkout.</div></div></div>
+          <div class="tl"><div class="tt">14:00</div><div class="tc"><div class="h"><span class="tag move">TRANSFER</span>Skyliner / N'EX → NRT</div><div class="d">Leave 3h before departure. Monday afternoon traffic is unpredictable; the Skyliner from Nippori is the most reliable clock.</div></div></div>
+          <div class="tl"><div class="tt">17:15</div><div class="tc"><div class="h"><span class="tag flight">FLIGHT</span>CX521 NRT T2 → HKG T1</div><div class="d">Cathay Pacific, non-stop 4h 55m. <b>HKD 4,625</b> — same fare as the 09:25, two-thirds of a day more Tokyo. Not a red-eye.</div></div></div>
+          <div class="tl"><div class="tt">21:10</div><div class="tc"><div class="h">Arrive Hong Kong T1</div><div class="d">Back in the city by ~22:00. Desk-ready Tuesday morning.</div></div></div>
+        </div>
+      </div>
+
+      <div class="section-title">🏨 Where to stay · live 同程 rates</div>
+      <div class="hotel">
+        <div class="hn">東京台場日航大酒店 · Grand Nikko Tokyo Daiba</div>
+        <div class="hm">2 Chome-6-1 Daiba, Minato · Rating 4.9 (1,312 reviews) · Laundry, luggage storage, gym, meeting facilities, parking</div>
+        <div class="hp">HKD 1,658 <span class="pm">/ night · from CNY 1,423 (同程)</span></div>
+        <div style="font-size:12.5px;color:#4A5460;margin-top:6px"><b>Recommended.</b> Highest-rated of the three and a 5-minute walk to Tokyo Big Sight / Ariake — for an exhibition trip the location pays for itself in taxi fares alone. 3 nights = HKD 4,975.</div>
+        <a href="https://s.ly.com/HqZ36k6G9" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+      <div class="hotel alt">
+        <div class="hn">東京巨蛋酒店 · Tokyo Dome Hotel</div>
+        <div class="hm">1 Chome-3-61 Koraku, Bunkyo · Rating 4.8 (1,730 reviews) · Laundry, luggage storage, gym, bar, parking</div>
+        <div class="hp">HKD 1,472 <span class="pm">/ night · from CNY 1,263 (同程)</span></div>
+        <div style="font-size:12.5px;color:#4A5460;margin-top:6px">Central and well-connected (Suidōbashi / Kōrakuen) — better if your exhibition is at Tokyo International Forum or you want evening access to central Tokyo. ~40 min to Big Sight.</div>
+        <a href="https://s.ly.com/Bqb56k6Mb" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+      <div class="hotel alt">
+        <div class="hn">維拉芳泉羽田機場大酒店 · Villa Fontaine Haneda T3</div>
+        <div class="hm">2 Chome-7-1 Hanedakuko, Ōta · Rating 4.8 (2,721 reviews) · Laundry, gym, SPA, meeting facilities, bar, parking</div>
+        <div class="hp">HKD 869 <span class="pm">/ night · from CNY 746 (同程)</span></div>
+        <div style="font-size:12.5px;color:#4A5460;margin-top:6px">Budget pick — physically connected to Haneda T3. Only worth it if you also switch the outbound to CX548 (HND 13:55). From Haneda to Odaiba is ~25 min, so it still works; from Narita it does not.</div>
+        <a href="https://s.ly.com/cqH76k6Td" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+
+      <div class="section-title">💰 Budget · per person</div>
+      <div class="budget">
+        <div class="brow"><span>Round-trip air (CX504 + CX521)</span><b>HKD 12,017</b></div>
+        <div class="brow"><span>Hotel · 3 nights @ Grand Nikko Daiba</span><b>HKD 4,975</b></div>
+        <div class="brow"><span>Airport transfers (N'EX / Skyliner ×2 + local)</span><b>HKD 610</b></div>
+        <div class="brow"><span>Meals · ~JPY 8,000 / day × 4</span><b>HKD 1,626</b></div>
+        <div class="brow"><span>Attractions (Skytree, teamLab) + buffer</span><b>HKD 900</b></div>
+        <div class="brow total"><span>Estimated total</span><b>HKD 20,128</b></div>
+      </div>
+      <div style="font-size:11.5px;color:#9AA3AE;margin-top:8px">
+        FX 15 Sep 2026: 1 HKD = 19.69 JPY, 1 HKD = 0.858 CNY. Hotel rates are 同程 live quotes, room-only, excl. Tokyo accommodation tax (JPY 100–200 / night, paid at check-in).
+      </div>
+
+      <div class="section-title">📋 Practical notes</div>
+      <div class="notecard">
+        <h4>Getting around</h4>
+        <ul>
+          <li>Add <b>Suica to Apple Wallet</b> before you fly — no card machine, no queue, tap and go on every train, bus and konbini.</li>
+          <li>NRT → city: <b>Skyliner 41 min / ¥2,580</b> (Nippori) or N'EX ~60 min / ¥3,070 (Tokyo Sta., direct).</li>
+          <li>Odaiba ↔ central Tokyo: Rinkai Line + Yurikamome. The Yurikamome loop is worth one ride in daylight for the Rainbow Bridge view.</li>
+          <li>Taxis are clean and safe but expensive — NRT to Odaiba is ¥20,000+. Don't.</li>
+        </ul>
+      </div>
+      <div class="notecard">
+        <h4>Weather reality check</h4>
+        <p>26.9°C on arrival dropping to ~21°C by Day 4 — pack a light jacket for the evenings. Rain probability is only 20–27% all four days, but <b>late September is still typhoon season</b>. Re-check 72h out; if a storm closes in, CX will usually allow a free date change on the same booking class.</p>
+      </div>
+      <div class="notecard">
+        <h4>Exhibition-specific</h4>
+        <ul>
+          <li>Pre-register for a visitor badge — on-site registration at Big Sight is a 30–45 min queue.</li>
+          <li>Business cards: bring 200+, and receive with both hands. Japan runs on them.</li>
+          <li>Power: Type A, <b>100V</b>. Bring a Type G→A adapter; chargers themselves are 100–240V.</li>
+          <li>Pocket Wi-Fi or eSIM — Big Sight's public Wi-Fi is unreliable on packed show days.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <aside class="side">
+      <div class="qr-panel">
+        <h3>📱 Scan with WeChat to view on mobile</h3>
+        <div id="qrcode"></div>
+        <div id="qrcode-mini"></div>
+        <div class="qr-cap">Scan to view on mobile</div>
+        <div class="qr-url" id="qr-url"></div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    <span>Generated 15 Sep 2026 · 16:59 HKT · Fares &amp; hotels: 同程 MCP (live) · Weather: Open-Meteo · FX: exchangerate-api</span>
+    <span>Cathay Pacific × WorkBuddy · Travel Expert</span>
+  </footer>
+
+</div>
+
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      document.getElementById('qr-url').textContent = url;
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
