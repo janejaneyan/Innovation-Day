@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tokyo Exhibition Trip · HKG ⇄ TYO · 25–28 Sep 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #F0F2F5; color: #1A1A2E; line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px 48px; }
+
+  .brand-header {
+    background: #004D3A; color: #fff; padding: 28px 32px; margin: 0 -16px 24px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .wordmark { font-size: 26px; font-weight: 800; letter-spacing: .5px; }
+  .wordmark .x { color: #4FD1A5; margin: 0 2px; }
+  .sub { font-size: 14px; color: rgba(255,255,255,.82); font-weight: 400; }
+  .meta-strip { font-size: 12.5px; color: rgba(255,255,255,.62); margin-top: 4px; }
+
+  .layout { display: flex; gap: 24px; align-items: flex-start; }
+  .main { flex: 1 1 auto; min-width: 0; }
+  .side { flex: 0 0 240px; }
+
+  .qr-panel {
+    background: #fff; border: 1px solid #E3E7EC; border-radius: 12px;
+    padding: 20px 16px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    position: sticky; top: 16px;
+  }
+  .qr-panel h3 { font-size: 13px; color: #00604C; letter-spacing: .4px; margin-bottom: 14px; }
+  #qrcode { display: inline-block; padding: 10px; border: 1px solid #E3E7EC; border-radius: 8px; background: #fff; }
+  #qrcode img, #qrcode canvas { display: block; width: 200px; height: 200px; }
+  .qr-cap { font-size: 12px; color: #6B7480; margin-top: 12px; }
+  .qr-url { font-size: 10.5px; color: #9AA3AE; margin-top: 8px; word-break: break-all; }
+
+  .section-title {
+    font-size: 13px; font-weight: 800; letter-spacing: 1.2px; color: #00604C;
+    text-transform: uppercase; margin: 28px 0 12px; padding-left: 10px;
+    border-left: 4px solid #00604C;
+  }
+
+  .card {
+    background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    padding: 18px 20px; margin-bottom: 14px; border-left: 4px solid #00604C;
+  }
+  .card.alt { border-left-color: #B9C2CC; }
+  .card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .fn { font-size: 17px; font-weight: 800; letter-spacing: .3px; }
+  .carrier { font-size: 12px; color: #6B7480; font-weight: 500; }
+  .badge {
+    background: #00604C; color: #fff; font-size: 11px; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px; letter-spacing: .3px; white-space: nowrap;
+  }
+  .badge.altb { background: #8A94A0; }
+
+  .route { display: flex; align-items: center; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+  .pt { text-align: center; min-width: 82px; }
+  .pt .t { font-size: 22px; font-weight: 800; line-height: 1.15; }
+  .pt .a { font-size: 12px; color: #6B7480; font-weight: 600; letter-spacing: .5px; }
+  .pt .c { font-size: 11px; color: #9AA3AE; }
+  .arrow { flex: 1 1 90px; text-align: center; color: #00604C; font-size: 18px; position: relative; }
+  .arrow .dur { display: block; font-size: 11.5px; color: #6B7480; font-weight: 600; }
+
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12.5px; color: #4A5460; margin-top: 4px; }
+  .facts span b { color: #1A1A2E; }
+
+  .price-row { display: flex; align-items: baseline; gap: 10px; margin-top: 12px; }
+  .price { font-size: 24px; font-weight: 800; color: #00604C; }
+  .price-note { font-size: 11.5px; color: #9AA3AE; }
+
+  .btn-tongcheng {
+    display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C;
+    color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px;
+    text-decoration: none; text-align: center; transition: background .2s;
+  }
+  .btn-tongcheng:hover { background: #c92c2e; }
+
+  .total-bar {
+    background: linear-gradient(135deg, #00604C 0%, #00876A 100%);
+    color: #fff; border-radius: 12px; padding: 16px 20px; margin-top: 6px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+    box-shadow: 0 4px 16px rgba(0,96,76,.22);
+  }
+  .total-bar .lbl { font-size: 13px; opacity: .9; }
+  .total-bar .val { font-size: 26px; font-weight: 800; }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .tile {
+    background: #fff; border-radius: 10px; padding: 14px; text-align: center;
+    box-shadow: 0 4px 16px rgba(0,0,0,.06); border-top: 3px solid #3498DB;
+  }
+  .tile .d { font-size: 12px; font-weight: 700; color: #6B7480; }
+  .tile .i { font-size: 26px; margin: 6px 0 2px; }
+  .tile .tp { font-size: 17px; font-weight: 800; }
+  .tile .lo { font-size: 12px; color: #9AA3AE; }
+  .tile .p { font-size: 11.5px; color: #3498DB; font-weight: 600; }
+  .tile .w { font-size: 11.5px; color: #9AA3AE; }
+
+  .infocard {
+    background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    padding: 18px 20px; margin-bottom: 14px; border-left: 4px solid #27AE60;
+  }
+  .infocard h4 { font-size: 14px; color: #27AE60; margin-bottom: 10px; letter-spacing: .3px; }
+  .fxrow { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed #EDF0F3; font-size: 13.5px; }
+  .fxrow:last-child { border-bottom: none; }
+  .fxrow b { color: #00604C; font-weight: 800; }
+
+  .notecard {
+    background: #fff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,.06);
+    padding: 16px 20px; margin-bottom: 12px; border-left: 4px solid #F39C12;
+  }
+  .notecard h4 { font-size: 14px; color: #C87F0A; margin-bottom: 6px; }
+  .notecard p, .notecard li { font-size: 13.2px; color: #4A5460; }
+  .notecard ul { padding-left: 18px; margin-top: 4px; }
+
+  .flags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .flag {
+    background: #fff; border: 1px solid #E3E7EC; border-radius: 20px;
+    padding: 5px 14px; font-size: 12px; color: #4A5460; font-weight: 600;
+  }
+  .flag.ok { border-color: #00604C; color: #00604C; background: #F1F8F5; }
+
+  footer {
+    margin-top: 32px; padding-top: 16px; border-top: 1px solid #E3E7EC;
+    font-size: 11.5px; color: #9AA3AE; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+
+  #qrcode-mini { display: none; }
+
+  @media (max-width: 767px) {
+    .layout { flex-direction: column; }
+    .side { flex: 1 1 auto; width: 100%; order: 9; }
+    .qr-panel { position: static; margin-top: 20px; }
+    .grid3, .grid4 { grid-template-columns: repeat(2, 1fr); }
+    .brand-header { padding: 20px 18px; margin: 0 -16px 18px; }
+    .wordmark { font-size: 20px; }
+    .pt { min-width: 70px; }
+    .pt .t { font-size: 19px; }
+    .price { font-size: 21px; }
+    .total-bar .val { font-size: 22px; }
+    #qrcode { display: none; }
+    #qrcode-mini { display: inline-block; padding: 8px; border: 1px solid #E3E7EC; border-radius: 8px; }
+    #qrcode-mini img, #qrcode-mini canvas { display: block; width: 120px; height: 120px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="brand-header">
+    <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+    <span class="sub">“End of month, four days in Tokyo for an exhibition. No red-eyes.”</span>
+    <span class="meta-strip">HKG ⇄ TYO · 25 Sep (Fri) – 28 Sep (Mon) 2026 · 4 days / 3 nights · All flights daytime, no red-eyes</span>
+  </header>
+
+  <div class="flags">
+    <span class="flag ok">Departure 25 Sep Fri</span>
+    <span class="flag ok">Return 28 Sep Mon</span>
+    <span class="flag ok">No red-eye / no overnight</span>
+    <span class="flag">Cathay Pacific priority</span>
+    <span class="flag">Direct non-stop</span>
+  </div>
+
+  <div class="layout">
+    <div class="main">
+
+      <div class="section-title">✈ Outbound · HKG → Tokyo · Fri 25 Sep 2026</div>
+
+      <div class="card">
+        <div class="card-top">
+          <div>
+            <div class="fn">CX504 <span class="carrier">Cathay Pacific · Boeing 777</span></div>
+          </div>
+          <span class="badge">★ Recommended</span>
+        </div>
+        <div class="route">
+          <div class="pt"><div class="t">09:05</div><div class="a">HKG</div><div class="c">Hong Kong T1</div></div>
+          <div class="arrow">────✈<span class="dur">4h 25m · Non-stop</span></div>
+          <div class="pt"><div class="t">14:30</div><div class="a">NRT</div><div class="c">Tokyo Narita T2</div></div>
+        </div>
+        <div class="facts">
+          <span><b>Cabin:</b> Economy</span>
+          <span><b>Stops:</b> 0</span>
+          <span><b>Aircraft:</b> 777</span>
+          <span><b>Arrives:</b> same day, daylight</span>
+        </div>
+        <div class="price-row">
+          <span class="price">HKD 7,392</span>
+          <span class="price-note">≈ JPY 145,546 · from CNY 6,342 (同程)</span>
+        </div>
+        <a href="https://www.ly.com/iflight/book1.html?para=HKG*TYO*2026-09-25*1900-01-01*OW*1_0_0*Y|S|C|F&departureCity=%E9%A6%99%E6%B8%AF&arrivalCity=%E4%B8%9C%E4%BA%AC&refId=2000411781&refid=2000411781" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+
+      <div class="card alt">
+        <div class="card-top">
+          <div>
+            <div class="fn">CX548 <span class="carrier">Cathay Pacific · Boeing 777-300ER</span></div>
+          </div>
+          <span class="badge altb">Alternative · Haneda</span>
+        </div>
+        <div class="route">
+          <div class="pt"><div class="t">08:40</div><div class="a">HKG</div><div class="c">Hong Kong T1</div></div>
+          <div class="arrow">────✈<span class="dur">4h 15m · Non-stop</span></div>
+          <div class="pt"><div class="t">13:55</div><div class="a">HND</div><div class="c">Tokyo Haneda T3</div></div>
+        </div>
+        <div class="facts">
+          <span><b>Cabin:</b> Economy</span>
+          <span><b>Stops:</b> 0</span>
+          <span><b>Why:</b> Haneda = 25 min to city / Ariake &amp; Tokyo Big Sight</span>
+        </div>
+        <div class="price-row">
+          <span class="price">HKD 14,455</span>
+          <span class="price-note">≈ JPY 284,619 · from CNY 12,402 (同程)</span>
+        </div>
+        <a href="https://www.ly.com/iflight/book1.html?para=HKG*TYO*2026-09-25*1900-01-01*OW*1_0_0*Y|S|C|F&departureCity=%E9%A6%99%E6%B8%AF&arrivalCity=%E4%B8%9C%E4%BA%AC&refId=2000411781&refid=2000411781" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+
+      <div class="section-title">✈ Inbound · Tokyo → HKG · Mon 28 Sep 2026</div>
+
+      <div class="card">
+        <div class="card-top">
+          <div>
+            <div class="fn">CX509 <span class="carrier">Cathay Pacific · Airbus A330-300</span></div>
+          </div>
+          <span class="badge">★ Recommended</span>
+        </div>
+        <div class="route">
+          <div class="pt"><div class="t">09:25</div><div class="a">NRT</div><div class="c">Tokyo Narita T2</div></div>
+          <div class="arrow">────✈<span class="dur">4h 50m · Non-stop</span></div>
+          <div class="pt"><div class="t">13:15</div><div class="a">HKG</div><div class="c">Hong Kong T1</div></div>
+        </div>
+        <div class="facts">
+          <span><b>Cabin:</b> Economy</span>
+          <span><b>Stops:</b> 0</span>
+          <span><b>Arrives:</b> 13:15 — back in office same afternoon</span>
+        </div>
+        <div class="price-row">
+          <span class="price">HKD 4,625</span>
+          <span class="price-note">≈ JPY 91,066 · from CNY 3,968 (同程)</span>
+        </div>
+        <a href="https://www.ly.com/iflight/book1.html?para=TYO*HKG*2026-09-28*1900-01-01*OW*1_0_0*Y|S|C|F&departureCity=%E4%B8%9C%E4%BA%AC&arrivalCity=%E9%A6%99%E6%B8%AF&refId=2000411781&refid=2000411781" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+
+      <div class="card alt">
+        <div class="card-top">
+          <div>
+            <div class="fn">CX543 <span class="carrier">Cathay Pacific · Boeing 777</span></div>
+          </div>
+          <span class="badge altb">Alternative · Haneda</span>
+        </div>
+        <div class="route">
+          <div class="pt"><div class="t">10:05</div><div class="a">HND</div><div class="c">Tokyo Haneda T3</div></div>
+          <div class="arrow">────✈<span class="dur">4h 45m · Non-stop</span></div>
+          <div class="pt"><div class="t">13:50</div><div class="a">HKG</div><div class="c">Hong Kong T1</div></div>
+        </div>
+        <div class="facts">
+          <span><b>Cabin:</b> Economy</span>
+          <span><b>Stops:</b> 0</span>
+          <span><b>Why:</b> sleep in, depart from Haneda</span>
+        </div>
+        <div class="price-row">
+          <span class="price">HKD 5,562</span>
+          <span class="price-note">≈ JPY 109,516 · from CNY 4,772 (同程)</span>
+        </div>
+        <a href="https://www.ly.com/iflight/book1.html?para=TYO*HKG*2026-09-28*1900-01-01*OW*1_0_0*Y|S|C|F&departureCity=%E4%B8%9C%E4%BA%AC&arrivalCity=%E9%A6%99%E6%B8%AF&refId=2000411781&refid=2000411781" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+      </div>
+
+      <div class="total-bar">
+        <div>
+          <div class="lbl">Recommended round-trip total (CX504 + CX509)</div>
+          <div class="val">HKD 12,017</div>
+        </div>
+        <div style="font-size:12.5px;opacity:.85;text-align:right">
+          ≈ JPY 236,600 / CNY 10,310 per person<br>
+          Haneda upgrade option: HKD 20,017
+        </div>
+      </div>
+
+      <div class="section-title">🌤 Destination Weather · Tokyo · 25–28 Sep 2026</div>
+      <div class="grid4">
+        <div class="tile">
+          <div class="d">Fri 25</div><div class="i">☁️</div>
+          <div class="tp">26.9°<span class="lo"> / 19.9°</span></div>
+          <div class="p">Rain 24%</div><div class="w">Wind 8.9 km/h</div>
+        </div>
+        <div class="tile">
+          <div class="d">Sat 26</div><div class="i">☁️</div>
+          <div class="tp">23.4°<span class="lo"> / 19.0°</span></div>
+          <div class="p">Rain 20%</div><div class="w">Wind 7.1 km/h</div>
+        </div>
+        <div class="tile">
+          <div class="d">Sun 27</div><div class="i">🌦️</div>
+          <div class="tp">20.8°<span class="lo"> / 19.2°</span></div>
+          <div class="p">Rain 24%</div><div class="w">Wind 6.8 km/h</div>
+        </div>
+        <div class="tile">
+          <div class="d">Mon 28</div><div class="i">🌧️</div>
+          <div class="tp">21.7°<span class="lo"> / 19.7°</span></div>
+          <div class="p">Rain 27%</div><div class="w">Wind 7.4 km/h</div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:#9AA3AE;margin-top:8px">
+        Source: Open-Meteo 16-day forecast, retrieved 15 Sep 2026. Late September is typhoon season — re-check 3 days before departure.
+      </div>
+
+      <div class="section-title">💱 Live Exchange Rate</div>
+      <div class="infocard">
+        <h4>HKD reference · 15 Sep 2026</h4>
+        <div class="fxrow"><span>1 HKD → JPY</span><b>19.69</b></div>
+        <div class="fxrow"><span>1 HKD → CNY</span><b>0.858</b></div>
+        <div class="fxrow"><span>JPY 10,000 → HKD</span><b>507.9</b></div>
+      </div>
+
+      <div class="section-title">📋 Travel Notes</div>
+      <div class="notecard">
+        <h4>1 · Entry — visa-free + Visit Japan Web</h4>
+        <p>Hong Kong SAR passport and BNO holders get visa-free short-stay entry to Japan (up to 90 days) for tourism/business. Passport must be valid for the whole stay. Fill in <b>Visit Japan Web</b> (customs + immigration QR) before departure — it cuts the arrival queue to a few minutes at both NRT and HND.</p>
+      </div>
+      <div class="notecard">
+        <h4>2 · Power banks — carry-on only</h4>
+        <p>Power banks / spare lithium batteries must go in <b>cabin baggage, never checked</b>. Under 100Wh: no approval needed. 100–160Wh: airline approval, max 2 units. Terminals must be taped or capped. Charging via USB on CX 777 / A330 is available at most seats.</p>
+      </div>
+      <div class="notecard">
+        <h4>3 · Airport → city · and power sockets</h4>
+        <ul>
+          <li><b>Narita (NRT)</b> → Tokyo Station: Skyliner 41 min (¥2,580) or N'EX ~60 min — this is your arrival airport on CX504.</li>
+          <li><b>Haneda (HND)</b> → Shimbashi / city: Keikyu 25 min (¥500ish) — the fastest option if you take CX548.</li>
+          <li><b>Ariake / Tokyo Big Sight</b>: Rinkai Line or Yurikamome from Shin-Kiba / Shimbashi.</li>
+          <li><b>Power:</b> Japan is Type A, <b>100V</b>, 50/60Hz. HK Type G plugs need an adapter; most phone/laptop chargers are 100–240V so they work fine.</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <aside class="side">
+      <div class="qr-panel">
+        <h3>📱 Scan with WeChat to view on mobile</h3>
+        <div id="qrcode"></div>
+        <div id="qrcode-mini"></div>
+        <div class="qr-cap">Scan to view on mobile</div>
+        <div class="qr-url" id="qr-url"></div>
+      </div>
+    </aside>
+  </div>
+
+  <footer>
+    <span>Generated 15 Sep 2026 · 16:53 HKT · Data: 同程 (ly.com) live fares · Open-Meteo · exchangerate-api</span>
+    <span>Cathay Pacific × WorkBuddy · Travel Expert</span>
+  </footer>
+
+</div>
+
+<script>
+  (function() {
+    var url = window.location.href;
+    try {
+      document.getElementById('qr-url').textContent = url;
+      new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200, colorDark: '#00604C', colorLight: '#ffffff' });
+      new QRCode(document.getElementById('qrcode-mini'), { text: url, width: 120, height: 120, colorDark: '#00604C', colorLight: '#ffffff' });
+    } catch (e) {
+      document.getElementById('qrcode').innerHTML = '<p style="color:#888;font-size:12px;">QR generation failed. URL: ' + url + '</p>';
+    }
+  })();
+</script>
+</body>
+</html>
