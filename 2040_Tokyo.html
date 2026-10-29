@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HKG → Tokyo → HKG | Weekend Itinerary</title>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #F0F2F5; color: #1A1A2E; line-height: 1.55; -webkit-font-smoothing: antialiased;
+  }
+  .brand-header {
+    background: linear-gradient(135deg, #004D3A 0%, #00604C 100%);
+    color: #fff; padding: 22px 28px;
+  }
+  .brand-header .wordmark { font-size: 20px; font-weight: 700; letter-spacing: .3px; display: block; }
+  .brand-header .wordmark .x { color: #C8A24A; margin: 0 4px; }
+  .brand-header .sub { display: block; margin-top: 6px; font-size: 13px; color: #BFE0D4; font-style: italic; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 48px; }
+  .layout { display: grid; grid-template-columns: 1fr 240px; gap: 24px; align-items: start; }
+  .card {
+    background: #fff; border-radius: 12px; padding: 20px 22px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06); margin-bottom: 20px;
+  }
+  .leg-title {
+    font-size: 15px; font-weight: 700; color: #00604C; letter-spacing: .5px;
+    text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .leg-title .plane { font-size: 17px; }
+  .flight {
+    border: 1px solid #E6E9EE; border-radius: 10px; padding: 16px 18px; margin-bottom: 12px; background: #FFF;
+  }
+  .flight.rec { border: 2px solid #00604C; background: #F7FBF9; }
+  .f-top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .f-no { font-size: 16px; font-weight: 700; }
+  .badge { background: #00604C; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .badge.alt { background: #8A94A6; }
+  .f-route { display: flex; align-items: center; gap: 14px; margin: 12px 0 6px; flex-wrap: wrap; }
+  .f-time { font-size: 22px; font-weight: 700; letter-spacing: .5px; }
+  .f-ap { font-size: 12px; color: #6B7280; font-weight: 600; }
+  .f-arrow { color: #00604C; font-size: 15px; }
+  .f-meta { font-size: 13px; color: #4B5563; }
+  .f-price { font-size: 22px; font-weight: 700; color: #00604C; }
+  .f-price small { font-size: 12px; font-weight: 600; color: #6B7280; }
+  .f-note { font-size: 12.5px; color: #6B7280; margin-top: 8px; border-left: 3px solid #DDE3EA; padding-left: 10px; }
+  .btn-tongcheng {
+    display: inline-block; margin-top: 12px; padding: 10px 24px; background: #E4393C;
+    color: #fff; font-size: 14px; font-weight: 700; border-radius: 6px; text-decoration: none;
+    text-align: center; transition: background .2s;
+  }
+  .btn-tongcheng:hover { background: #c92c2e; }
+  .qr-box { border: 1px solid #E6E9EE; border-radius: 12px; padding: 16px; text-align: center; background: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+  .qr-box h4 { font-size: 13px; color: #00604C; margin-bottom: 12px; }
+  #qrcode, #qrcode-mini { display: inline-block; }
+  #qrcode img, #qrcode-mini img { display: block; }
+  .qr-cap { font-size: 12px; color: #6B7280; margin-top: 10px; }
+  .sec-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .wx-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .wx-day { background: #F4F9FD; border-left: 4px solid #3498DB; border-radius: 8px; padding: 12px 14px; }
+  .wx-day .d { font-size: 12px; font-weight: 700; color: #3498DB; text-transform: uppercase; }
+  .wx-day .t { font-size: 20px; font-weight: 700; margin: 4px 0; }
+  .wx-day .p { font-size: 12px; color: #4B5563; }
+  .fx-row { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; }
+  .fx-item { border-left: 4px solid #27AE60; padding-left: 12px; }
+  .fx-item .k { font-size: 12px; color: #6B7280; font-weight: 600; }
+  .fx-item .v { font-size: 20px; font-weight: 700; color: #27AE60; }
+  ul.notes { list-style: none; }
+  ul.notes li { border-left: 4px solid #F39C12; padding: 8px 0 8px 14px; margin-bottom: 10px; font-size: 13.5px; }
+  ul.notes li b { display: block; color: #1A1A2E; font-size: 13.5px; }
+  .total-bar { background: linear-gradient(135deg, #00604C 0%, #00876A 100%); color: #fff; border-radius: 12px; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+  .total-bar .lbl { font-size: 13px; color: #C9E8DC; }
+  .total-bar .amt { font-size: 28px; font-weight: 700; }
+  .total-bar .sub { font-size: 12px; color: #C9E8DC; }
+  footer { text-align: center; font-size: 12px; color: #8A94A6; padding: 8px 0 0; }
+  .mobile-qr { display: none; }
+  @media (max-width: 767px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .mobile-qr { display: block; text-align: center; }
+    .wx-row { grid-template-columns: 1fr; }
+    .wrap { padding: 16px 14px 32px; }
+    .f-time { font-size: 19px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="brand-header">
+  <span class="wordmark">Cathay Pacific <span class="x">×</span> WorkBuddy</span>
+  <span class="sub">"Friday night HKG to Tokyo. Football Saturday. Back to HKG Sunday. Budget-conscious."</span>
+</header>
+
+<div class="wrap">
+  <div class="layout">
+    <div class="main">
+
+      <div class="total-bar">
+        <div>
+          <div class="lbl">Recommended round trip · per person</div>
+          <div class="amt">HKD 2,745</div>
+          <div class="sub">≈ CNY 2,337 · ≈ JPY 55,233 · UO622 + GK027, all-in lowest combo</div>
+        </div>
+        <div style="font-size:13px;color:#C9E8DC;">
+          Fri 30 Oct 2026 → Sun 1 Nov 2026 · 2 nights in Tokyo
+        </div>
+      </div>
+
+      <!-- OUTBOUND -->
+      <div class="card">
+        <div class="leg-title"><span class="plane">✈</span> Outbound · HKG → Tokyo · Fri 30 Oct 2026</div>
+
+        <div class="flight rec">
+          <div class="f-top">
+            <div class="f-no">HK Express UO622</div>
+            <span class="badge">★ Recommended</span>
+          </div>
+          <div class="f-route">
+            <div><div class="f-time">17:55</div><div class="f-ap">HKG · Hong Kong T2</div></div>
+            <div class="f-arrow">✈ ─────▶</div>
+            <div><div class="f-time">22:45</div><div class="f-ap">HND · Haneda T3</div></div>
+            <div style="margin-left:auto;"><div class="f-price">HKD 1,642</div><small>CNY 1,398 · JPY 33,041</small></div>
+          </div>
+          <div class="f-meta">3h 50m · Non-stop · Lands before midnight · Haneda = 15 min to central Tokyo</div>
+          <div class="f-note">The only fare that is genuinely "Friday night" AND lands while the trains still run. Leave the office at 16:00, be at your Tokyo hotel by midnight, wake up with a full Saturday.</div>
+          <a href="https://s.ly.com/wLxkIF632" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight">
+          <div class="f-top">
+            <div class="f-no">HK Express UO650</div>
+            <span class="badge alt">Budget alternative</span>
+          </div>
+          <div class="f-route">
+            <div><div class="f-time">14:00</div><div class="f-ap">HKG · Hong Kong T2</div></div>
+            <div class="f-arrow">✈ ─────▶</div>
+            <div><div class="f-time">19:05</div><div class="f-ap">NRT · Narita T2</div></div>
+            <div style="margin-left:auto;"><div class="f-price">HKD 993</div><small>CNY 846 · JPY 19,995</small></div>
+          </div>
+          <div class="f-meta">4h 05m · Non-stop · Cheapest seat of the day · Narita = 60 min to central Tokyo</div>
+          <div class="f-note">Saves HKD 649 vs. the recommendation, but you give up Friday afternoon and land at Narita instead of Haneda (add ~60 min + ~¥1,300 ground transfer). Pick this if budget outranks the night departure.</div>
+          <a href="https://s.ly.com/sLxkIF6Z2" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+      </div>
+
+      <!-- INBOUND -->
+      <div class="card">
+        <div class="leg-title"><span class="plane">✈</span> Inbound · Tokyo → HKG · Sun 1 Nov 2026</div>
+
+        <div class="flight rec">
+          <div class="f-top">
+            <div class="f-no">Jetstar Japan GK027</div>
+            <span class="badge">★ Recommended</span>
+          </div>
+          <div class="f-route">
+            <div><div class="f-time">19:30</div><div class="f-ap">NRT · Narita T3</div></div>
+            <div class="f-arrow">✈ ─────▶</div>
+            <div><div class="f-time">23:45</div><div class="f-ap">HKG · Hong Kong T1</div></div>
+            <div style="margin-left:auto;"><div class="f-price">HKD 1,103</div><small>CNY 939 · JPY 22,193</small></div>
+          </div>
+          <div class="f-meta">5h 15m · Non-stop · Cheapest return of the day · Keeps all of Sunday in Tokyo</div>
+          <div class="f-note">Late departure means you get the full Sunday — no 06:00 airport scramble. Lands HKG 23:45, still within MTR operating hours for most routes.</div>
+          <a href="https://s.ly.com/HLXkIF6E2" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+
+        <div class="flight">
+          <div class="f-top">
+            <div class="f-no">Cathay Pacific CX509</div>
+            <span class="badge alt">Cathay alternative</span>
+          </div>
+          <div class="f-route">
+            <div><div class="f-time">08:50</div><div class="f-ap">HND · Haneda T3</div></div>
+            <div class="f-arrow">✈ ─────▶</div>
+            <div><div class="f-time">13:25</div><div class="f-ap">HKG · Hong Kong T1</div></div>
+            <div style="margin-left:auto;"><div class="f-price">HKD 3,753</div><small>CNY 3,196 · JPY 75,535</small></div>
+          </div>
+          <div class="f-meta">5h 35m · Non-stop · Full-service: 2 × 23 kg checked + meals + IFE included</div>
+          <div class="f-note">HKD 2,650 more than the Jetstar seat — but that gap partly closes once you add a checked bag and meals to the LCC fare. Costs you Sunday morning; you are back at your desk by 14:00.</div>
+          <a href="https://s.ly.com/KLXkIF6H2" target="_blank" rel="noopener noreferrer" class="btn-tongcheng">✈ Book on 同程</a>
+        </div>
+      </div>
+
+      <!-- WEATHER -->
+      <div class="card">
+        <div class="sec-title" style="color:#3498DB;">🌤 Destination Weather · Tokyo (JST)</div>
+        <div class="wx-row">
+          <div class="wx-day">
+            <div class="d">Fri 30 Oct</div>
+            <div class="t">22° / 12°</div>
+            <div class="p">Light rain · 24% precip<br>Wind 7 km/h</div>
+          </div>
+          <div class="wx-day">
+            <div class="d">Sat 31 Oct</div>
+            <div class="t">23° / 13°</div>
+            <div class="p">Mainly clear · 20% precip<br>Wind 8 km/h — ideal for football</div>
+          </div>
+          <div class="wx-day">
+            <div class="d">Sun 1 Nov</div>
+            <div class="t">18° / 13°</div>
+            <div class="p">Overcast · 5% precip<br>Wind 7 km/h</div>
+          </div>
+        </div>
+        <div class="f-note" style="margin-top:14px;border-color:#3498DB;">Saturday is the pick of the three days — 23°C, mainly clear, almost no rain. Pack a light layer for a late kick-off; it drops to ~13°C after sunset. Friday evening arrival will be wet, so keep a compact umbrella in your carry-on.</div>
+      </div>
+
+      <!-- FX -->
+      <div class="card">
+        <div class="sec-title" style="color:#27AE60;">💱 Live Exchange Rate</div>
+        <div class="fx-row">
+          <div class="fx-item"><div class="k">1 HKD</div><div class="v">20.13 JPY</div></div>
+          <div class="fx-item"><div class="k">1 CNY</div><div class="v">1.174 HKD</div></div>
+          <div class="fx-item"><div class="k">HKD 2,745</div><div class="v">≈ ¥55,233</div></div>
+        </div>
+        <div class="f-note" style="margin-top:14px;border-color:#27AE60;">Rate date: Thu 29 Oct 2026, 00:02 UTC · Source: exchangerate-api.com (open.er-api.com). Fares are quoted by 同程 in CNY and converted here at this rate — card settlement may differ by 1–3%.</div>
+      </div>
+
+      <!-- NOTES -->
+      <div class="card">
+        <div class="sec-title" style="color:#F39C12;">📋 Travel Notes</div>
+        <ul class="notes">
+          <li><b>Visa-free entry + Visit Japan Web</b>Holders of an HKSAR passport get 90 days visa-free in Japan — no paperwork, but you must have a return ticket. Register on Visit Japan Web before departure and screenshot the customs + immigration QR codes; it cuts the Haneda/Narita queue by 20–30 minutes on a Friday night.</li>
+          <li><b>LCC baggage trap — UO622 &amp; GK027</b>Both recommended legs are low-cost carriers: the headline fare covers 7 kg carry-on only. A 20 kg checked bag on HK Express costs roughly HKD 250–400 each way if bought online, more at the airport. If you are travelling with more than a backpack, run the numbers — Cathay CX509 with 2 × 23 kg included may close the gap.</li>
+          <li><b>Power banks &amp; Japan sockets</b>Power banks are carry-on only, never checked: max 100 Wh without approval, up to 160 Wh with airline consent (max 2 units). Japan runs Type A sockets at 100 V / 50–60 Hz — your Hong Kong Type G plug will not fit, so pack a universal adapter. Note 100 V charges some devices more slowly than home.</li>
+        </ul>
+        <div class="f-note" style="margin-top:12px;border-color:#F39C12;">Airport → city: Haneda (UO622 arrival) — Keikyu Airport Line to Shinagawa ~13 min / ~¥500, or Tokyo Monorail to Hamamatsucho ~15 min. Both run until ~00:00, so a 22:45 landing is safe. Narita (GK027 departure) — Keisei Skyliner to Nippori ~41 min / ~¥2,600, or Narita Express to Tokyo Station ~60 min / ~¥3,100. Leave the city by 16:30 for a 19:30 flight.</div>
+      </div>
+
+      <footer>Generated 29 Oct 2026 20:40 HKT · Steps: 6 · Flights &amp; booking links: 同程 MCP · Weather: Open-Meteo · FX: exchangerate-api.com</footer>
+    </div>
+
+    <div class="sidebar">
+      <div class="qr-box">
+        <h4>📱 Scan with WeChat<br>to view on mobile</h4>
+        <div id="qrcode"></div>
+        <div class="qr-cap">Opens this itinerary on your phone</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mobile-qr">
+    <div class="qr-box" style="max-width:200px;margin:0 auto;">
+      <h4>Scan to view on mobile</h4>
+      <div id="qrcode-mini"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var url = window.location.href;
+    function draw(id, size) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      try {
+        if (typeof QRCode === 'undefined') throw new Error('no lib');
+        new QRCode(el, { text: url, width: size, height: size, colorDark: '#00604C', colorLight: '#ffffff' });
+      } catch (e) {
+        el.innerHTML = '<p style="color:#888;font-size:12px;word-break:break-all;">QR unavailable. URL: ' + url + '</p>';
+      }
+    }
+    draw('qrcode', 200);
+    draw('qrcode-mini', 120);
+  })();
+</script>
+</body>
+</html>
